@@ -20,16 +20,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.vk.sdk.api.VKApiConst;
-import com.vk.sdk.api.VKError;
-import com.vk.sdk.api.VKParameters;
-import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.model.VKPhotoArray;
 
-import java.net.ResponseCache;
-
-import ru.geekbrains.photofinder.utils.JSONUtils;
 import ru.geekbrains.photofinder.utils.NetworkUtils;
 import ru.geekbrains.photofinder.utils.PrefUtils;
 import ru.geekbrains.photofinder.R;
@@ -46,7 +39,7 @@ public class ListResultFragment extends Fragment implements
     private double latitude;
     private String accessToken;
     private int lastSavedPosition;
-    // private VKPhotoArray vkPhotoArray;
+    private VKPhotoArray vkPhotoArray;
 
     private RecyclerView resultRecyclerView;
     private ListResultAdapter listResultAdapter;
@@ -86,9 +79,7 @@ public class ListResultFragment extends Fragment implements
                     getResources().getInteger(R.integer.list_result_no_save_instance_position));
         }
 
-
         loadSettings();
-        //  getPhotos();
         return view;
     }
 
@@ -98,51 +89,58 @@ public class ListResultFragment extends Fragment implements
         LoaderManager loaderManager = getActivity().getSupportLoaderManager();
         loaderManager.initLoader(getResources().getInteger(
                 R.integer.integer_phto_list_loader_id), null, this);
-        getPhotos(loaderManager);
-    }
-
-    private void getPhotos(LoaderManager loaderManager) {
-
 
         Loader<VKPhotoArray> getPhotosLoader = loaderManager.getLoader(getResources().getInteger(
                 R.integer.integer_phto_list_loader_id));
 
-    /*    if (getPhotosLoader == null) {
+        if (getPhotosLoader == null) {
             loaderManager.initLoader(getResources().getInteger(
                     R.integer.integer_phto_list_loader_id), null, this);
         } else {
             loaderManager.restartLoader(getResources().getInteger(
                     R.integer.integer_phto_list_loader_id), null, this);
-        }*/
-    }
+        }
 
+    }
 
     @SuppressLint("StaticFieldLeak")//как быть лучше в такой ситуации?
     @Override
     public android.support.v4.content.Loader<VKPhotoArray> onCreateLoader(int id, final Bundle args) {
         if (getResources().getInteger(R.integer.integer_phto_list_loader_id) == id) {
             return new AsyncTaskLoader<VKPhotoArray>(getContext()) {
+                VKPhotoArray vkPhotoArray = null;
 
                 @Override
                 protected void onStartLoading() {
-                 /*   if (args == null) {
+                  /*  if (args == null) {
                         return;
                     }*/
-                    forceLoad();
+                    if (vkPhotoArray != null) {
+                        deliverResult(vkPhotoArray);
+                    } else {
+                        forceLoad();
+                    }
                 }
+
 
                 @Override
                 public VKPhotoArray loadInBackground() {
-                    VKPhotoArray vkPhotoArray = null;
-                    VKResponse response = NetworkUtils.getPhotos(getContext(), longitude, latitude);
+                    VKResponse response = NetworkUtils.getPhotos(getContext(), latitude, longitude);
                     if (response != null) {
-                        vkPhotoArray =
-                                JSONUtils.parsePhotosResponseToVkList(response, getContext());
+                        vkPhotoArray = (VKPhotoArray) response.parsedModel;
 
                     }
                     return vkPhotoArray;
                 }
+
+                @Override
+                public void deliverResult(VKPhotoArray data) {
+                    vkPhotoArray = data;
+                    super.deliverResult(data);
+                }
             };
+
+
         } else {
             throw new RuntimeException(getString(R.string.list_result_fragment_loader_id_error)
                     + id);
@@ -171,6 +169,12 @@ public class ListResultFragment extends Fragment implements
         }
     }
 
+
+    @Override
+    public void onLoaderReset(android.support.v4.content.Loader<VKPhotoArray> loader) {
+
+    }
+
     private void restoreRecyclerState() {
         switch (listResultAdapter.getItemViewType(getResources()
                 .getInteger(R.integer.list_result_default_number_view_type_check))) {
@@ -182,11 +186,6 @@ public class ListResultFragment extends Fragment implements
                 linearLayoutManager.scrollToPosition(lastSavedPosition);
             }
         }
-    }
-
-    @Override
-    public void onLoaderReset(android.support.v4.content.Loader<VKPhotoArray> loader) {
-
     }
 
     @Override
@@ -298,45 +297,3 @@ public class ListResultFragment extends Fragment implements
         getActivity().invalidateOptionsMenu();
     }
 }
-   /*private void getPhotos() {
-        VKRequest request = new VKRequest("photos.search",
-                VKParameters.from(VKApiConst.LAT, latitude,
-                        VKApiConst.LONG, longitude,
-                        VKApiConst.VERSION, getActivity().getString(R.string.vk_api_version),
-                        VKPhotoArray.class));
-        request.executeWithListener(new VKRequest.VKRequestListener() {
-            @Override
-            public void onComplete(VKResponse response) {
-                super.onComplete(response);
-                vkPhotoArray = JSONUtils.parsePhotosResponseToVkList(response, getContext());//нужно ли парсить в отдельном потоке
-                if (vkPhotoArray.size() == 0) {
-                    onActivityCallback.showErrorMessage(getActivity()
-                            .getString(R.string.no_search_result));
-                }
-                listResultAdapter.setData(vkPhotoArray);
-                listResultAdapter.notifyDataSetChanged();
-
-                if (lastSavedPosition > getResources().getInteger(
-                        R.integer.list_result_no_save_instance_position)) {
-                    switch (listResultAdapter.getItemViewType(getResources()
-                            .getInteger(R.integer.list_result_default_number_view_type_check))) {
-                        case ListResultAdapter.GRID_TYPE: {
-                            gridLayoutManager.scrollToPosition(lastSavedPosition);
-                            break;
-                        }
-                        default: {
-                            linearLayoutManager.scrollToPosition(lastSavedPosition);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onError(VKError error) {
-                onActivityCallback.showErrorMessage(getActivity()
-                        .getString(R.string.error_request));
-                super.onError(error);
-            }
-
-        });
-    }*/

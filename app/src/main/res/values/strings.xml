@@ -35,4 +35,5 @@
     <string name="json_object_vk_req_name_json_key">response</string>
     <string name="list_result_fragment_loader_id_error">Loader Not Implemented:</string>
     <string name="on_activity_callback__fragmen_error">must implement OnActivityCallback</string>
+    <string name="vk_photo_search_request_api">photos.search</string>
 </resources>
