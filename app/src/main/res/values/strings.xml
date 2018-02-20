@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">PhotoFinder</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="default_longitude">-43.1729427749</string>
+    <string name="default_latitude">-22.9032315871</string>
+    <string name="default_zoom">17.5</string>
+
+    <string name="login_vk_button_text">ВОЙТИ В ВК</string>
+
+
+    <string name="no_search_result">по вашему запросу ничего не найдено</string>
+    <string name="action_change_view">сменить вид</string>
+
+
+    <string name="vk_access_token_intent_key">\"access-code-key-intent\"</string>
+    <string name="latitude_intent_key">latitude-intent-key</string>
+    <string name="longitude_intent_key">longitude</string>
+
+    <string name="app_pref">app-pref</string>
+
+    <string name="recycle_view_type_preff_key">recycle-view-type</string>
+
+    <string name="list_result_position_save_key">list-result-pposition-key</string>
+
+    <string name="error_request">Ошибка запроса. Попробуйте еще раз.</string>
+    <string name="authorization_error">Ошибка авторизации. Попробуйте еще раз</string>
+
+    <string name="vk_api_version">5.73</string>
+
+
+    <string name="json_object_vk_res_name_json_key">response</string>
+    <string name="json_array_vk_req_json_key">items</string>
+    <string name="json_object_vk_req_name_json_key">response</string>
+    <string name="list_result_fragment_loader_id_error">Loader Not Implemented:</string>
+    <string name="on_activity_callback__fragmen_error">must implement OnActivityCallback</string>
+</resources>
