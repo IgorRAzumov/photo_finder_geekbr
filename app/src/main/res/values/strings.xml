@@ -3,37 +3,54 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="default_longitude">-43.1729427749</string>
-    <string name="default_latitude">-22.9032315871</string>
-    <string name="default_zoom">17.5</string>
+    <string name="vk_api_version" translatable="false">5.73</string>
+    <string name="vk_photo_search_request_method_name_api" translatable="false">photos.search</string>
+
+    <string name="default_longitude" translatable="false">-43.1729427749</string>
+    <string name="default_latitude" translatable="false">-22.9032315871</string>
+    <string name="default_zoom" translatable="false">17.5</string>
 
     <string name="login_vk_button_text">ВОЙТИ В ВК</string>
 
 
-    <string name="no_search_result">по вашему запросу ничего не найдено</string>
-    <string name="action_change_view">сменить вид</string>
+    <string name="vk_access_token_intent_key" translatable="false">access-code-key-intent</string>
+    <string name="latitude_intent_key" translatable="false">latitude-intent-key</string>
+    <string name="longitude_intent_key" translatable="false">longitude</string>
 
+    <string name="app_pref" translatable="false">app-pref</string>
 
-    <string name="vk_access_token_intent_key">\"access-code-key-intent\"</string>
-    <string name="latitude_intent_key">latitude-intent-key</string>
-    <string name="longitude_intent_key">longitude</string>
+    <string name="list_result_recycle_view_type_pref_key" translatable="false">recycle-view-type</string>
+    <string name="list_result_position_save_key" translatable="false">list-result-position-key</string>
 
-    <string name="app_pref">app-pref</string>
-
-    <string name="recycle_view_type_preff_key">recycle-view-type</string>
-
-    <string name="list_result_position_save_key">list-result-pposition-key</string>
+    <string name="list_result_no_search_result">по вашему запросу ничего не найдено</string>
+    <string name="list_result_menu_action_change_view">сменить вид</string>
 
     <string name="error_request">Ошибка запроса. Попробуйте еще раз.</string>
     <string name="authorization_error">Ошибка авторизации. Попробуйте еще раз</string>
-
-    <string name="vk_api_version">5.73</string>
-
-
-    <string name="json_object_vk_res_name_json_key">response</string>
-    <string name="json_array_vk_req_json_key">items</string>
-    <string name="json_object_vk_req_name_json_key">response</string>
     <string name="list_result_fragment_loader_id_error">Loader Not Implemented:</string>
-    <string name="on_activity_callback__fragmen_error">must implement OnActivityCallback</string>
-    <string name="vk_photo_search_request_api">photos.search</string>
+    <string name="on_activity_callback__fragment_error">must implement OnActivityCallback</string>
+
+
+    <string name="photo_loader_bundle_key_longitude" translatable="false">photo-loader-byndle-key-longitude</string>
+    <string name="photo_loader_bundle_key_latitude" translatable="false">photo-loader-byndle-key-latitude</string>
+    <string name="pager_result_photo_url_bundle_key" translatable="false">pager-photo--key</string>
+    <string name="map_activity_menu_action_change_find_settings">настройки поиска</string>
+
+
+    <string name="pref_sort_by_label">Сортировка результата</string>
+    <string name="pref_sort_by__key" translatable="false">sort-by-key</string>
+
+    <string name="pref_sort_by_like_label">Сортировка по количеству лайков</string>
+    <string name="pref_sort_by_date_label">Сортировка по дате загрузки</string>
+    <string name="pref_sort_by_like_value" translatable="false">1</string>
+    <string name="pref_sort_by_date_default_value" translatable="false">0</string>
+
+    <string name="pref_search_radius">Искать фотографии в радиусе:</string>
+
+    <string name="pref_radius__key" translatable="false">radius-search</string>
+    <string name="pref_seek_bar_radius_max" translatable="false">50000</string>
+    <string name="pref_seek_bar_radius_interval" translatable="false">500</string>
+    <string name="pref_seek_bar_radius_default" translatable="false">1</string>
+    <string name="pref_seek_bar_radius_unit" translatable="false">m</string>
+
 </resources>

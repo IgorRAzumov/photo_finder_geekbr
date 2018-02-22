@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="pref_sort_by_option_labels">
+        <item>@string/pref_sort_by_like_label</item>
+        <item>@string/pref_sort_by_date_label</item>
+    </array>
+
+    <array name="pref_sort_by_option_values">
+        <item>@string/pref_sort_by_like_value</item>
+        <item>@string/pref_sort_by_date_default_value</item>
+    </array>
+
+
+</resources>

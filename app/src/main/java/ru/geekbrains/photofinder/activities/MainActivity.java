@@ -1,9 +1,8 @@
 package ru.geekbrains.photofinder.activities;
 
 import android.content.Intent;
-import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.vk.sdk.VKAccessToken;
@@ -12,7 +11,6 @@ import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
 
 import ru.geekbrains.photofinder.R;
-import ru.geekbrains.photofinder.fragments.MainFragment;
 
 public class MainActivity extends AppCompatActivity {
     private static int PHOTO_SEARCH_LOADER_ID = 11;

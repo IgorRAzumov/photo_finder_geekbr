@@ -2,7 +2,9 @@ package ru.geekbrains.photofinder.utils;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
 import com.vk.sdk.api.VKApiConst;
 import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKParameters;
@@ -18,8 +20,8 @@ public class NetworkUtils {
 
     public static VKResponse getPhotos(final Context context, double latitude, double longitude) {
         final VKResponse[] returnedVkResponse = new VKResponse[1];
-        VKRequest request = new VKRequest("photos.search",
-                VKParameters.from(VKApiConst.LAT, latitude,
+        VKRequest request = new VKRequest(context.getString(R.string.vk_photo_search_request_method_name_api),
+                VKParameters.from(VKApiConst.LAT, String.valueOf(latitude),
                         VKApiConst.LONG, longitude,
                         VKApiConst.VERSION, context.getString(R.string.vk_api_version)));
         request.setModelClass(VKPhotoArray.class);
@@ -28,7 +30,6 @@ public class NetworkUtils {
             public void onComplete(VKResponse response) {
                 super.onComplete(response);
                 returnedVkResponse[0] = response;
-                Log.d(")", response.toString());
             }
 
             @Override
@@ -39,6 +40,15 @@ public class NetworkUtils {
 
         });
         return returnedVkResponse[0];
+    }
+
+    public static void loadImage(ImageView imageView, String url, Context context, int targetWidth,
+                           int targetHeight) {
+        Picasso
+                .with(context)
+                .load(url)
+                // .resize(targetWidth, targetHeight)
+                .into(imageView);
     }
 }
 

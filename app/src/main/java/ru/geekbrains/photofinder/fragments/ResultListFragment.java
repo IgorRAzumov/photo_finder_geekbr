@@ -1,15 +1,13 @@
 package ru.geekbrains.photofinder.fragments;
 
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
+
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,26 +18,27 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.model.VKPhotoArray;
 
-import ru.geekbrains.photofinder.utils.NetworkUtils;
-import ru.geekbrains.photofinder.utils.PrefUtils;
 import ru.geekbrains.photofinder.R;
 import ru.geekbrains.photofinder.adapters.ListResultAdapter;
+import ru.geekbrains.photofinder.asyncTaskLoaders.PhotoSearchVkLoader;
+import ru.geekbrains.photofinder.utils.PrefUtils;
 
 
-public class ListResultFragment extends Fragment implements
+public class ResultListFragment extends Fragment implements
         ListResultAdapter.RecycleViewOnItemClickListener, LoaderManager.LoaderCallbacks<VKPhotoArray> {
     public interface OnActivityCallback {
         void showErrorMessage(String message);
+
+        void switchRecyclerToViewPager(int position);
     }
 
     private double longitude;
     private double latitude;
     private String accessToken;
     private int lastSavedPosition;
-    private VKPhotoArray vkPhotoArray;
+
 
     private RecyclerView resultRecyclerView;
     private ListResultAdapter listResultAdapter;
@@ -48,7 +47,7 @@ public class ListResultFragment extends Fragment implements
 
     private OnActivityCallback onActivityCallback;
 
-    public ListResultFragment() {
+    public ResultListFragment() {
 
     }
 
@@ -86,60 +85,18 @@ public class ListResultFragment extends Fragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        LoaderManager loaderManager = getActivity().getSupportLoaderManager();
-        loaderManager.initLoader(getResources().getInteger(
+        getActivity().getSupportLoaderManager().initLoader(getResources().getInteger(
                 R.integer.integer_phto_list_loader_id), null, this);
-
-        Loader<VKPhotoArray> getPhotosLoader = loaderManager.getLoader(getResources().getInteger(
-                R.integer.integer_phto_list_loader_id));
-
-        if (getPhotosLoader == null) {
-            loaderManager.initLoader(getResources().getInteger(
-                    R.integer.integer_phto_list_loader_id), null, this);
-        } else {
-            loaderManager.restartLoader(getResources().getInteger(
-                    R.integer.integer_phto_list_loader_id), null, this);
-        }
-
     }
 
-    @SuppressLint("StaticFieldLeak")//как быть лучше в такой ситуации?
+
     @Override
     public android.support.v4.content.Loader<VKPhotoArray> onCreateLoader(int id, final Bundle args) {
         if (getResources().getInteger(R.integer.integer_phto_list_loader_id) == id) {
-            return new AsyncTaskLoader<VKPhotoArray>(getContext()) {
-                VKPhotoArray vkPhotoArray = null;
-
-                @Override
-                protected void onStartLoading() {
-                  /*  if (args == null) {
-                        return;
-                    }*/
-                    if (vkPhotoArray != null) {
-                        deliverResult(vkPhotoArray);
-                    } else {
-                        forceLoad();
-                    }
-                }
-
-
-                @Override
-                public VKPhotoArray loadInBackground() {
-                    VKResponse response = NetworkUtils.getPhotos(getContext(), latitude, longitude);
-                    if (response != null) {
-                        vkPhotoArray = (VKPhotoArray) response.parsedModel;
-
-                    }
-                    return vkPhotoArray;
-                }
-
-                @Override
-                public void deliverResult(VKPhotoArray data) {
-                    vkPhotoArray = data;
-                    super.deliverResult(data);
-                }
-            };
-
+            Bundle bundle = new Bundle();
+            bundle.putDouble(getString(R.string.photo_loader_bundle_key_longitude), longitude);
+            bundle.putDouble(getString(R.string.photo_loader_bundle_key_latitude), latitude);
+            return new PhotoSearchVkLoader(getContext(), bundle);
 
         } else {
             throw new RuntimeException(getString(R.string.list_result_fragment_loader_id_error)
@@ -162,36 +119,24 @@ public class ListResultFragment extends Fragment implements
                 }
             } else {
                 onActivityCallback.showErrorMessage(getActivity()
-                        .getString(R.string.no_search_result));
+                        .getString(R.string.list_result_no_search_result));
             }
         } else {
             onActivityCallback.showErrorMessage(getContext().getString(R.string.error_request));
         }
     }
 
-
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<VKPhotoArray> loader) {
 
     }
 
-    private void restoreRecyclerState() {
-        switch (listResultAdapter.getItemViewType(getResources()
-                .getInteger(R.integer.list_result_default_number_view_type_check))) {
-            case ListResultAdapter.GRID_TYPE: {
-                gridLayoutManager.scrollToPosition(lastSavedPosition);
-                break;
-            }
-            default: {
-                linearLayoutManager.scrollToPosition(lastSavedPosition);
-            }
-        }
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.result_list_menu, menu);
+
     }
 
     @Override
@@ -206,6 +151,7 @@ public class ListResultFragment extends Fragment implements
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -238,7 +184,7 @@ public class ListResultFragment extends Fragment implements
             onActivityCallback = (OnActivityCallback) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + getContext().getString(R.string.on_activity_callback__fragmen_error));
+                    + getContext().getString(R.string.on_activity_callback__fragment_error));
         }
     }
 
@@ -251,7 +197,21 @@ public class ListResultFragment extends Fragment implements
 
     @Override
     public void onItemRecyclerClick(View v, int position) {
+        onActivityCallback.switchRecyclerToViewPager(position);
+    }
 
+
+    private void restoreRecyclerState() {
+        switch (listResultAdapter.getItemViewType(getResources()
+                .getInteger(R.integer.list_result_default_number_view_type_check))) {
+            case ListResultAdapter.GRID_TYPE: {
+                gridLayoutManager.scrollToPosition(lastSavedPosition);
+                break;
+            }
+            default: {
+                linearLayoutManager.scrollToPosition(lastSavedPosition);
+            }
+        }
     }
 
     private void getDataFromIntent() {
@@ -270,7 +230,6 @@ public class ListResultFragment extends Fragment implements
             resultRecyclerView.setLayoutManager(gridLayoutManager);
         }
     }
-
 
     private void switchRecyclerViewLayoutManager() {
         boolean isGrid = resultRecyclerView.getLayoutManager() == gridLayoutManager;

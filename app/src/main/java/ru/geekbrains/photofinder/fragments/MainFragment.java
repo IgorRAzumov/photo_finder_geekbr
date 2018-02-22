@@ -7,16 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
-import com.vk.sdk.VKAccessToken;
-import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKScope;
-import com.vk.sdk.VKSdk;
-import com.vk.sdk.api.VKError;
 
 import ru.geekbrains.photofinder.R;
-import ru.geekbrains.photofinder.activities.MainActivity;
 import ru.geekbrains.photofinder.activities.MapActivity;
 
 public class MainFragment extends Fragment implements View.OnClickListener {

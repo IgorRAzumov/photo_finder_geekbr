@@ -21,7 +21,6 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".activities.ListResultActivity" />
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +28,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MapActivity"></activity>
+
+        <activity
+            android:name=".activities.MapActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".activities.ResultActivity"
+            android:parentActivityName=".activities.MapActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MapActivity" />
+        </activity>
+
+        <activity
+            android:name=".activities.SettingsSearchActivity"
+            android:parentActivityName=".activities.MapActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MapActivity" />
+        </activity>
     </application>
 
 </manifest>

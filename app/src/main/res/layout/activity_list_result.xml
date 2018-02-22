@@ -4,5 +4,5 @@
     android:id="@+id/fl_list_result_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ru.geekbrains.photofinder.activities.ListResultActivity">
+    tools:context="ru.geekbrains.photofinder.activities.ResultActivity">
 </FrameLayout>

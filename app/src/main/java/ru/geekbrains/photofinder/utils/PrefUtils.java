@@ -14,7 +14,7 @@ public class PrefUtils {
         SharedPreferences sharedPreferences = context.getSharedPreferences(
                 context.getString(R.string.app_pref), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(context.getString(R.string.recycle_view_type_preff_key), type);
+        editor.putInt(context.getString(R.string.list_result_recycle_view_type_pref_key), type);
         editor.apply();
     }
 
@@ -23,7 +23,7 @@ public class PrefUtils {
         SharedPreferences sharedPreferences = context.getSharedPreferences(
                 context.getString(R.string.app_pref), Context.MODE_PRIVATE);
 
-        return sharedPreferences.getInt(context.getString(R.string.recycle_view_type_preff_key),
+        return sharedPreferences.getInt(context.getString(R.string.list_result_recycle_view_type_pref_key),
                 ListResultAdapter.LINEAR_TYPE);
     }
 }

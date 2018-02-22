@@ -1,14 +1,17 @@
 package ru.geekbrains.photofinder.activities;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,16 +40,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-    @SuppressLint("MissingPermission")
-//не знаю почему, но линт считает, что мы не проверяем полученные разрешения, а мы - проверяем
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_LOCATION_PERMISSIONS_ID: {
-                if (permissions.length == 1 &&
-                        permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION) &&
-                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     map.setMyLocationEnabled(true);
                 } else {
                     setDefaultMapLatLong();
@@ -59,12 +62,23 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-    private void setDefaultMapLatLong() {
-        LatLng defaultLatLng = new LatLng(Double.parseDouble(getString(R.string.default_latitude)),
-                Double.parseDouble(getString(R.string.default_longitude)));
-        float zoom = Float.parseFloat(getString(R.string.default_zoom));
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLatLng, zoom));
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.map_menu, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_find_settings: {
+                Intent intent = new Intent(this, SettingsSearchActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -86,9 +100,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onMapClick(LatLng latLng) {
-        Intent intent = new Intent(this, ListResultActivity.class);
+        Intent intent = new Intent(this, ResultActivity.class);
         intent.putExtra(getString(R.string.latitude_intent_key), latLng.latitude);
         intent.putExtra(getString(R.string.longitude_intent_key), latLng.longitude);
         startActivity(intent);
     }
+
+    private void setDefaultMapLatLong() {
+        LatLng defaultLatLng = new LatLng(Double.parseDouble(getString(R.string.default_latitude)),
+                Double.parseDouble(getString(R.string.default_longitude)));
+        float zoom = Float.parseFloat(getString(R.string.default_zoom));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLatLng, zoom));
+
+    }
+
 }

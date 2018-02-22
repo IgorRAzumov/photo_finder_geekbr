@@ -1,21 +1,17 @@
 package ru.geekbrains.photofinder.activities;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import ru.geekbrains.photofinder.R;
-import ru.geekbrains.photofinder.adapters.ListResultAdapter;
-import ru.geekbrains.photofinder.fragments.ListResultFragment;
+import ru.geekbrains.photofinder.fragments.ResultListFragment;
+import ru.geekbrains.photofinder.fragments.ResultViewPagerFragment;
 
-public class ListResultActivity extends AppCompatActivity implements
-        ListResultFragment.OnActivityCallback {
+public class ResultActivity extends AppCompatActivity implements
+        ResultListFragment.OnActivityCallback, ResultViewPagerFragment.onActivityCallback {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +22,7 @@ public class ListResultActivity extends AppCompatActivity implements
         Fragment fragment = fragmentManager
                 .findFragmentById(R.id.fl_list_result_container);
         if (fragment == null) {
-            fragment = new ListResultFragment();
+            fragment = new ResultListFragment();
             fragmentManager.beginTransaction()
                     .add(R.id.fl_list_result_container, fragment)
                     .commit();
@@ -37,6 +33,18 @@ public class ListResultActivity extends AppCompatActivity implements
     @Override
     public void showErrorMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void switchRecyclerToViewPager(int position) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        ResultViewPagerFragment resultViewPagerFragment = new ResultViewPagerFragment();
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.fl_list_result_container, resultViewPagerFragment)
+                .addToBackStack(null)
+                .commit();
+
     }
 
 }

@@ -49,7 +49,7 @@ public class ListResultAdapter extends RecyclerView.Adapter<ListResultAdapter.Ph
         void onItemRecyclerClick(View v, int position);
     }
 
-    private VKPhotoArray photosArray;
+    public static VKPhotoArray photosArray;//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     private int viewType;
     private RecycleViewOnItemClickListener recycleViewOnItemClickListener;
 
@@ -121,7 +121,7 @@ public class ListResultAdapter extends RecyclerView.Adapter<ListResultAdapter.Ph
         Picasso
                 .with(context)
                 .load(url)
-                .resize(targetWidth, targetHeight)
+               // .resize(targetWidth, targetHeight)
                 .into(imageView);
     }
 

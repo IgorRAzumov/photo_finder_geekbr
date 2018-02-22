@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ListPreference
+        android:defaultValue="@string/pref_sort_by_date_default_value"
+        android:entries="@array/pref_sort_by_option_labels"
+        android:entryValues="@array/pref_sort_by_option_values"
+        android:key="@string/pref_sort_by__key"
+        android:title="@string/pref_sort_by_label"
+        android:summary="%s"/>
+
+    <com.pavelsikun.seekbarpreference.SeekBarPreferenceCompat
+        android:key="@string/pref_radius__key"
+        android:title="@string/pref_search_radius"
+        android:defaultValue="@string/pref_seek_bar_radius_default"
+
+        app:msbp_minValue="@string/pref_seek_bar_radius_default"
+        app:msbp_maxValue="@string/pref_seek_bar_radius_max"
+        app:msbp_interval="@string/pref_seek_bar_radius_interval"
+        app:msbp_measurementUnit="@string/pref_seek_bar_radius_unit"
+        app:msbp_dialogEnabled="@bool/seek_bar_library_dialog_enabled"/>
+</PreferenceScreen>
