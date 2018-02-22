@@ -53,4 +53,19 @@
     <string name="pref_seek_bar_radius_default" translatable="false">1</string>
     <string name="pref_seek_bar_radius_unit" translatable="false">m</string>
 
+    <string name="pref_date_start_key" translatable="false">pref-start-date</string>
+    <string name="pref_date_end_key" translatable="false">pref-end-date</string>
+    <string name="pref_date_select_date_start">Выберите начальную дату  поиска:</string>
+    <string name="pref_date_select_date_end">Выберите конечную дату  поиска:</string>
+    <string name="pref_date_min_date" translatable="false">08/31/2010</string>
+    <string name="pref_date_min_date_end" translatable="false">09/31/2010</string>
+    <string name="pref_sort_result_category_title">СОРТИРОВКА РЕЗУЛЬТАТОВ</string>
+    <string name="pref_radius_category_title">РАДИУС ПОИСКА</string>
+    <string name="pref_date_category_title">ДАТЫ ПОИСКА</string>
+    <string name="pref_radius_category_key">radius-kategory-key</string>
+    <string name="pref_sort_category_key">sort-category-key</string>
+    <string name="pref_date_category_key">date-category-key</string>
+    <string name="pref_date_start_title">Минимальная дата поиска</string>
+    <string name="pref_date_end_title">Максимальная дата поиска</string>
+
 </resources>

@@ -3,17 +3,20 @@ package ru.geekbrains.photofinder.fragments;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.PreferenceScreen;
+import android.support.annotation.Nullable;
+
+
+
+import com.takisoft.fix.support.v7.preference.DatePickerPreference;
+import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat;
+
 
 import ru.geekbrains.photofinder.R;
 
 public class SearchSettingsFragment extends PreferenceFragmentCompat {
-
     @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        addPreferencesFromResource(R.xml.preff_search_photo);
+    public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
+        setPreferencesFromResource(R.xml.preff_search_photo, rootKey);
 
         /*SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
         PreferenceScreen preferenceScreen = getPreferenceScreen();
