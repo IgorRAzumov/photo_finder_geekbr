@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ru.geekbrains.photofinder.R;
-import ru.geekbrains.photofinder.adapters.ListResultAdapter;
+import ru.geekbrains.photofinder.adapters.PhotoResultAdapter;
 import ru.geekbrains.photofinder.adapters.ViewPagerResultAdapter;
 
 
@@ -39,7 +39,7 @@ public class ResultViewPagerFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_pager_result, container, false);
         resultViewPager = view.findViewById(R.id.vp_result_photos_search);
-        resultAdapter = new ViewPagerResultAdapter(getFragmentManager(), ListResultAdapter.photosArray);
+        resultAdapter = new ViewPagerResultAdapter(getFragmentManager(), PhotoResultAdapter.photosArray);
         resultViewPager.setAdapter(resultAdapter);
         return view;
     }

@@ -16,7 +16,7 @@ import com.vk.sdk.api.model.VKPhotoArray;
 import ru.geekbrains.photofinder.R;
 
 
-public class ListResultAdapter extends RecyclerView.Adapter<ListResultAdapter.PhotoCardViewHolder> {
+public class PhotoResultAdapter extends RecyclerView.Adapter<PhotoResultAdapter.PhotoCardViewHolder> {
     public static final int GRID_TYPE = 1;
     public static final int LINEAR_TYPE = 2;
 
@@ -54,7 +54,7 @@ public class ListResultAdapter extends RecyclerView.Adapter<ListResultAdapter.Ph
     private RecycleViewOnItemClickListener recycleViewOnItemClickListener;
 
 
-    public ListResultAdapter(RecycleViewOnItemClickListener
+    public PhotoResultAdapter(RecycleViewOnItemClickListener
                                      recycleViewOnItemClickListener) {
         this.recycleViewOnItemClickListener = recycleViewOnItemClickListener;
         photosArray = new VKPhotoArray();

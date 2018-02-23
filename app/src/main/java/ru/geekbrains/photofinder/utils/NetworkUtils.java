@@ -18,11 +18,17 @@ import ru.geekbrains.photofinder.R;
 public class NetworkUtils {
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
-    public static VKResponse getPhotos(final Context context, double latitude, double longitude) {
+    public static VKResponse getPhotos(final Context context, double latitude, double longitude,
+                                       String startTime, String endTime, String sort, String radius) {
         final VKResponse[] returnedVkResponse = new VKResponse[1];
         VKRequest request = new VKRequest(context.getString(R.string.vk_photo_search_request_method_name_api),
-                VKParameters.from(VKApiConst.LAT, String.valueOf(latitude),
+                VKParameters.from(
+                        VKApiConst.LAT, latitude,
                         VKApiConst.LONG, longitude,
+                        "start_time",startTime,
+                        "end_time",endTime,
+                        VKApiConst.SORT,sort,
+                        "radius",radius,
                         VKApiConst.VERSION, context.getString(R.string.vk_api_version)));
         request.setModelClass(VKPhotoArray.class);
         request.executeSyncWithListener(new VKRequest.VKRequestListener() {
@@ -43,7 +49,7 @@ public class NetworkUtils {
     }
 
     public static void loadImage(ImageView imageView, String url, Context context, int targetWidth,
-                           int targetHeight) {
+                                 int targetHeight) {
         Picasso
                 .with(context)
                 .load(url)

@@ -21,13 +21,13 @@ import android.view.ViewGroup;
 import com.vk.sdk.api.model.VKPhotoArray;
 
 import ru.geekbrains.photofinder.R;
-import ru.geekbrains.photofinder.adapters.ListResultAdapter;
+import ru.geekbrains.photofinder.adapters.PhotoResultAdapter;
 import ru.geekbrains.photofinder.asyncTaskLoaders.PhotoSearchVkLoader;
 import ru.geekbrains.photofinder.utils.PrefUtils;
 
 
 public class ResultListFragment extends Fragment implements
-        ListResultAdapter.RecycleViewOnItemClickListener, LoaderManager.LoaderCallbacks<VKPhotoArray> {
+        PhotoResultAdapter.RecycleViewOnItemClickListener, LoaderManager.LoaderCallbacks<VKPhotoArray> {
     public interface OnActivityCallback {
         void showErrorMessage(String message);
 
@@ -37,11 +37,14 @@ public class ResultListFragment extends Fragment implements
     private double longitude;
     private double latitude;
     private String accessToken;
+
+
+
     private int lastSavedPosition;
 
 
     private RecyclerView resultRecyclerView;
-    private ListResultAdapter listResultAdapter;
+    private PhotoResultAdapter photoResultAdapter;
     private LinearLayoutManager linearLayoutManager;
     private GridLayoutManager gridLayoutManager;
 
@@ -68,8 +71,8 @@ public class ResultListFragment extends Fragment implements
                 .getInteger(R.integer.span_count_grid_result_portr));
         linearLayoutManager = new LinearLayoutManager(getContext());
         resultRecyclerView.setLayoutManager(linearLayoutManager);
-        listResultAdapter = new ListResultAdapter(this);
-        resultRecyclerView.setAdapter(listResultAdapter);
+        photoResultAdapter = new PhotoResultAdapter(this);
+        resultRecyclerView.setAdapter(photoResultAdapter);
 
         lastSavedPosition = getResources().getInteger(R.integer.list_result_no_save_instance_position);
         if (savedInstanceState != null) {
@@ -85,8 +88,10 @@ public class ResultListFragment extends Fragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getActivity().getSupportLoaderManager().initLoader(getResources().getInteger(
-                R.integer.integer_phto_list_loader_id), null, this);
+        if (getActivity() != null) {
+            getActivity().getSupportLoaderManager().initLoader(getResources().getInteger(
+                    R.integer.integer_phto_list_loader_id), null, this);
+        }
     }
 
 
@@ -94,6 +99,11 @@ public class ResultListFragment extends Fragment implements
     public android.support.v4.content.Loader<VKPhotoArray> onCreateLoader(int id, final Bundle args) {
         if (getResources().getInteger(R.integer.integer_phto_list_loader_id) == id) {
             Bundle bundle = new Bundle();
+            int radius;
+            String startDate;
+            String endDate;
+            String sortBy;
+
             bundle.putDouble(getString(R.string.photo_loader_bundle_key_longitude), longitude);
             bundle.putDouble(getString(R.string.photo_loader_bundle_key_latitude), latitude);
             return new PhotoSearchVkLoader(getContext(), bundle);
@@ -110,8 +120,8 @@ public class ResultListFragment extends Fragment implements
             (android.support.v4.content.Loader<VKPhotoArray> loader, VKPhotoArray data) {
         if (data != null) {
             if (data.size() != 0) {
-                listResultAdapter.setData(data);
-                listResultAdapter.notifyDataSetChanged();
+                photoResultAdapter.setData(data);
+                photoResultAdapter.notifyDataSetChanged();
 
                 if (lastSavedPosition > getResources().getInteger(
                         R.integer.list_result_no_save_instance_position)) {
@@ -141,9 +151,18 @@ public class ResultListFragment extends Fragment implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (listResultAdapter != null) {
+        if (photoResultAdapter != null) {
             switch (item.getItemId()) {
                 case (R.id.action_change_view): {
+                    int viewType = photoResultAdapter.getItemViewType(getResources().getInteger(
+                            R.integer.list_result_default_number_view_type_check));
+
+                    //не работает/ я так понимаю,  с особенностями размещения в франментах?
+                    if (viewType == PhotoResultAdapter.LINEAR_TYPE) {
+                        item.setIcon(R.drawable.ic_action_switch_view_type_linear);
+                    } else {
+                        item.setIcon(R.drawable.ic_action_switch_view_type_grid);
+                    }
                     switchRecyclerViewLayoutManager();
                     return true;
                 }
@@ -156,11 +175,11 @@ public class ResultListFragment extends Fragment implements
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (listResultAdapter != null) {
+        if (photoResultAdapter != null) {
             int fistVisiblePosition;
-            if (listResultAdapter.getItemViewType(getResources()
+            if (photoResultAdapter.getItemViewType(getResources()
                     .getInteger(R.integer.list_result_default_number_view_type_check)) ==
-                    ListResultAdapter.GRID_TYPE) {
+                    PhotoResultAdapter.GRID_TYPE) {
                 fistVisiblePosition = gridLayoutManager.findFirstVisibleItemPosition();
             } else {
                 fistVisiblePosition = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
@@ -172,7 +191,7 @@ public class ResultListFragment extends Fragment implements
     @Override
     public void onPause() {
         super.onPause();
-        PrefUtils.writeAdapterTypeToSharedPref(getActivity(), listResultAdapter
+        PrefUtils.writeAdapterTypeToSharedPref(getActivity(), photoResultAdapter
                 .getItemViewType(getResources().getInteger(
                         R.integer.list_result_default_number_view_type_check)));
     }
@@ -202,9 +221,9 @@ public class ResultListFragment extends Fragment implements
 
 
     private void restoreRecyclerState() {
-        switch (listResultAdapter.getItemViewType(getResources()
+        switch (photoResultAdapter.getItemViewType(getResources()
                 .getInteger(R.integer.list_result_default_number_view_type_check))) {
-            case ListResultAdapter.GRID_TYPE: {
+            case PhotoResultAdapter.GRID_TYPE: {
                 gridLayoutManager.scrollToPosition(lastSavedPosition);
                 break;
             }
@@ -222,9 +241,9 @@ public class ResultListFragment extends Fragment implements
     }
 
     private void loadSettings() {
-        int viewType = PrefUtils.getViewTypeForPreference(getActivity());//ListResultAdapter.LINEAR_TYPE;
-        listResultAdapter.setViewType(viewType);
-        if (viewType == ListResultAdapter.LINEAR_TYPE) {
+        int viewType = PrefUtils.getViewTypeForPreference(getActivity());//PhotoResultAdapter.LINEAR_TYPE;
+        photoResultAdapter.setViewType(viewType);
+        if (viewType == PhotoResultAdapter.LINEAR_TYPE) {
             resultRecyclerView.setLayoutManager(linearLayoutManager);
         } else {
             resultRecyclerView.setLayoutManager(gridLayoutManager);
@@ -237,21 +256,21 @@ public class ResultListFragment extends Fragment implements
         if (!isGrid) {
             fistVisiblePosition = linearLayoutManager.findFirstVisibleItemPosition();
             resultRecyclerView.setLayoutManager(gridLayoutManager);
-            listResultAdapter.setViewType(ListResultAdapter.GRID_TYPE);
+            photoResultAdapter.setViewType(PhotoResultAdapter.GRID_TYPE);
             onDataChange();
             gridLayoutManager.scrollToPosition(fistVisiblePosition);
 
         } else {
             fistVisiblePosition = gridLayoutManager.findFirstVisibleItemPosition();
             resultRecyclerView.setLayoutManager(linearLayoutManager);
-            listResultAdapter.setViewType(ListResultAdapter.LINEAR_TYPE);
+            photoResultAdapter.setViewType(PhotoResultAdapter.LINEAR_TYPE);
             onDataChange();
             linearLayoutManager.scrollToPosition(fistVisiblePosition);
         }
     }
 
     private void onDataChange() {
-        listResultAdapter.notifyDataSetChanged();
+        photoResultAdapter.notifyDataSetChanged();
         resultRecyclerView.invalidateItemDecorations();
         getActivity().invalidateOptionsMenu();
     }

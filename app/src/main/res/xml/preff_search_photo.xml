@@ -5,20 +5,19 @@
         android:key="@string/pref_sort_category_key"
         android:title="@string/pref_sort_result_category_title">
         <ListPreference
-            android:defaultValue="@string/pref_sort_by_date_default_value"
+            android:defaultValue= "@string/pref_sort_by_date_default_value"
             android:entries="@array/pref_sort_by_option_labels"
             android:entryValues="@array/pref_sort_by_option_values"
             android:key="@string/pref_sort_by__key"
             android:summary="%s"
-            android:title="@string/pref_sort_by_label"
-            android:negativeButtonText="@string/pref_date_end_title"/>
+            android:title="@string/pref_sort_by_label" />
     </PreferenceCategory>
 
     <PreferenceCategory
         android:key="@string/pref_radius_category_key"
         android:title="@string/pref_radius_category_title">
         <com.pavelsikun.seekbarpreference.SeekBarPreferenceCompat
-            android:defaultValue="@string/pref_seek_bar_radius_default"
+            android:defaultValue="@integer/pref_radius_defaul_value"
             android:key="@string/pref_radius__key"
             android:title="@string/pref_search_radius"
 
@@ -26,13 +25,14 @@
             app:msbp_interval="@string/pref_seek_bar_radius_interval"
             app:msbp_maxValue="@string/pref_seek_bar_radius_max"
             app:msbp_measurementUnit="@string/pref_seek_bar_radius_unit"
-            app:msbp_minValue="@string/pref_seek_bar_radius_default" />
+            app:msbp_minValue="@integer/pref_radius_defaul_value"/>
     </PreferenceCategory>
 
     <PreferenceCategory
         android:key="@string/pref_date_category_key"
         android:title="@string/pref_date_category_title">
         <com.takisoft.fix.support.v7.preference.DatePickerPreference
+            android:defaultValue="@string/pref_date_min_date_end"
             android:key="@string/pref_date_start_key"
             android:persistent="@bool/pref_date_picker_persistence"
             android:summary="@string/pref_date_select_date_start"

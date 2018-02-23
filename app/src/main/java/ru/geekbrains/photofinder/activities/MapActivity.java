@@ -2,6 +2,7 @@ package ru.geekbrains.photofinder.activities;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,12 +21,17 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import ru.geekbrains.photofinder.R;
+import ru.geekbrains.photofinder.utils.PrefUtils;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback,
-        GoogleMap.OnMapClickListener {
+        GoogleMap.OnMapClickListener,SharedPreferences.OnSharedPreferenceChangeListener{
     private static final int REQUEST_LOCATION_PERMISSIONS_ID = 0;
     private GoogleMap map;
+
     private String accessToken;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +57,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         && ActivityCompat.checkSelfPermission(this,
                         Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     map.setMyLocationEnabled(true);
+
                 } else {
                     setDefaultMapLatLong();
                 }
@@ -85,6 +92,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
         map.setOnMapClickListener(this);
+
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
@@ -114,4 +124,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        if(s.equals(getString(R.string.pref_sort_category_key))){
+
+        }
+
+        if(s.equals(getString(R.string.pref_radius_category_key))){
+
+        }
+
+        if(s.equals(getString(R.string.pref_date_category_key))){
+
+        }
+
+
+    }
 }

@@ -31,41 +31,52 @@
     <string name="on_activity_callback__fragment_error">must implement OnActivityCallback</string>
 
 
+    <string name="map_activity_menu_action_change_find_settings">настройки поиска</string>
+
     <string name="photo_loader_bundle_key_longitude" translatable="false">photo-loader-byndle-key-longitude</string>
     <string name="photo_loader_bundle_key_latitude" translatable="false">photo-loader-byndle-key-latitude</string>
     <string name="pager_result_photo_url_bundle_key" translatable="false">pager-photo--key</string>
-    <string name="map_activity_menu_action_change_find_settings">настройки поиска</string>
 
 
+    <string name="pref_sort_result_category_title">СОРТИРОВКА РЕЗУЛЬТАТОВ</string>
     <string name="pref_sort_by_label">Сортировка результата</string>
-    <string name="pref_sort_by__key" translatable="false">sort-by-key</string>
-
     <string name="pref_sort_by_like_label">Сортировка по количеству лайков</string>
     <string name="pref_sort_by_date_label">Сортировка по дате загрузки</string>
+
+    <string name="pref_sort_category_key" translatable="false">sort-category-key</string>
+    <string name="pref_sort_by__key" translatable="false">sort-by-key</string>
     <string name="pref_sort_by_like_value" translatable="false">1</string>
     <string name="pref_sort_by_date_default_value" translatable="false">0</string>
 
+
+    <string name="pref_radius_category_title">РАДИУС ПОИСКА</string>
     <string name="pref_search_radius">Искать фотографии в радиусе:</string>
 
+    <string name="pref_radius_category_key" translatable="false">radius-kategory-key</string>
     <string name="pref_radius__key" translatable="false">radius-search</string>
     <string name="pref_seek_bar_radius_max" translatable="false">50000</string>
     <string name="pref_seek_bar_radius_interval" translatable="false">500</string>
     <string name="pref_seek_bar_radius_default" translatable="false">1</string>
     <string name="pref_seek_bar_radius_unit" translatable="false">m</string>
 
-    <string name="pref_date_start_key" translatable="false">pref-start-date</string>
-    <string name="pref_date_end_key" translatable="false">pref-end-date</string>
-    <string name="pref_date_select_date_start">Выберите начальную дату  поиска:</string>
-    <string name="pref_date_select_date_end">Выберите конечную дату  поиска:</string>
-    <string name="pref_date_min_date" translatable="false">08/31/2010</string>
-    <string name="pref_date_min_date_end" translatable="false">09/31/2010</string>
-    <string name="pref_sort_result_category_title">СОРТИРОВКА РЕЗУЛЬТАТОВ</string>
-    <string name="pref_radius_category_title">РАДИУС ПОИСКА</string>
+
     <string name="pref_date_category_title">ДАТЫ ПОИСКА</string>
-    <string name="pref_radius_category_key">radius-kategory-key</string>
-    <string name="pref_sort_category_key">sort-category-key</string>
-    <string name="pref_date_category_key">date-category-key</string>
+    <string name="pref_date_select_date_start">Выберите начальную дату  поиска</string>
+    <string name="pref_date_select_date_end">Выберите конечную дату  поиска</string>
     <string name="pref_date_start_title">Минимальная дата поиска</string>
     <string name="pref_date_end_title">Максимальная дата поиска</string>
+
+    <string name="pref_date_category_key" translatable="false">date-category-key</string>
+    <string name="pref_date_start_key" translatable="false">pref-start-date</string>
+    <string name="pref_date_end_key" translatable="false">pref-end-date</string>
+    <string name="pref_date_min_date" translatable="false">08/31/2010</string>
+    <string name="pref_date_min_date_end" translatable="false">09/31/2010</string>
+  <!--  <string name="pref_date_max_date_default" translatable="false">02/23/2018</string>-->
+
+
+
+
+
+
 
 </resources>
