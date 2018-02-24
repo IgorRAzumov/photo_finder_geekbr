@@ -6,66 +6,46 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import ru.geekbrains.photofinder.R;
-import ru.geekbrains.photofinder.utils.PrefUtils;
+import ru.geekbrains.photofinder.fragments.MapFragment;
+import ru.geekbrains.photofinder.fragments.ResultListFragment;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback,
-        GoogleMap.OnMapClickListener,SharedPreferences.OnSharedPreferenceChangeListener{
-    private static final int REQUEST_LOCATION_PERMISSIONS_ID = 0;
-    private GoogleMap map;
-
-    private String accessToken;
-
-
-
+public class MapActivity extends AppCompatActivity implements
+        SharedPreferences.OnSharedPreferenceChangeListener,
+        ru.geekbrains.photofinder.fragments.MapFragment.OnActivityCallback {
+//    private String accessToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        accessToken = getIntent().getStringExtra(getString(R.string.vk_access_token_intent_key));
+//        accessToken = getIntent().getStringExtra(getString(R.string.vk_access_token_intent_key));
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.fr_map_fragment);
-        if (mapFragment != null) {////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            mapFragment.getMapAsync(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        getResources().getInteger(R.integer.request_location_permission_id));
+            }
         }
-    }
 
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_LOCATION_PERMISSIONS_ID: {
-                if (ActivityCompat.checkSelfPermission(this,
-                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                        && ActivityCompat.checkSelfPermission(this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    map.setMyLocationEnabled(true);
-
-                } else {
-                    setDefaultMapLatLong();
-                }
-                break;
-            }
-            default: {
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            }
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.fl_map_fragment_container);
+        if (fragment == null) {
+            fragment = new MapFragment();
+            fragmentManager.beginTransaction()
+                    .add(R.id.fl_map_fragment_container, fragment)
+                    .commit();
         }
     }
 
@@ -87,27 +67,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        map = googleMap;
-        map.setOnMapClickListener(this);
-
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                map.setMyLocationEnabled(true);
-            } else {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        REQUEST_LOCATION_PERMISSIONS_ID);
-            }
-        } else {
-            map.setMyLocationEnabled(true);
-        }
-    }
-
+    //вопрос - каждый ли раз, когда мы так стартуем активити с вложенным в него лоадером
+    // - будет запускаться новый лоадер? Вроде, как читал и дебажил - создается новый.
+    // Просто в чем суть - если создается новый каждый раз - все нормю Тогда мы не обрабатываем
+    // изменения в Preference в этом классе. А запрашиваем их из них значения при новом запросе
     @Override
     public void onMapClick(LatLng latLng) {
         Intent intent = new Intent(this, ResultActivity.class);
@@ -116,25 +79,23 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         startActivity(intent);
     }
 
-    private void setDefaultMapLatLong() {
-        LatLng defaultLatLng = new LatLng(Double.parseDouble(getString(R.string.default_latitude)),
-                Double.parseDouble(getString(R.string.default_longitude)));
-        float zoom = Float.parseFloat(getString(R.string.default_zoom));
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLatLng, zoom));
+    @Override
+    public void onMapReady() {
 
     }
 
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        if(s.equals(getString(R.string.pref_sort_category_key))){
+        if (s.equals(getString(R.string.pref_sort_category_key))) {
 
         }
 
-        if(s.equals(getString(R.string.pref_radius_category_key))){
+        if (s.equals(getString(R.string.pref_radius_category_key))) {
 
         }
 
-        if(s.equals(getString(R.string.pref_date_category_key))){
+        if (s.equals(getString(R.string.pref_date_category_key))) {
 
         }
 

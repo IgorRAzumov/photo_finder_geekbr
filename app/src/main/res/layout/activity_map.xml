@@ -4,9 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ru.geekbrains.photofinder.activities.MapActivity">
-    <fragment
-        android:id="@+id/fr_map_fragment"
+    <FrameLayout
+        android:id="@+id/fl_map_fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.google.android.gms.maps.SupportMapFragment"/>
+        android:layout_height="match_parent" />
 </LinearLayout>

@@ -99,11 +99,6 @@ public class ResultListFragment extends Fragment implements
     public android.support.v4.content.Loader<VKPhotoArray> onCreateLoader(int id, final Bundle args) {
         if (getResources().getInteger(R.integer.integer_phto_list_loader_id) == id) {
             Bundle bundle = new Bundle();
-            int radius;
-            String startDate;
-            String endDate;
-            String sortBy;
-
             bundle.putDouble(getString(R.string.photo_loader_bundle_key_longitude), longitude);
             bundle.putDouble(getString(R.string.photo_loader_bundle_key_latitude), latitude);
             return new PhotoSearchVkLoader(getContext(), bundle);
@@ -135,7 +130,7 @@ public class ResultListFragment extends Fragment implements
             onActivityCallback.showErrorMessage(getContext().getString(R.string.error_request));
         }
     }
-
+//1429623443
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<VKPhotoArray> loader) {
 

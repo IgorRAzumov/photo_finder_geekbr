@@ -10,7 +10,9 @@ import android.text.format.DateUtils;
 import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.model.VKPhotoArray;
 
+
 import java.text.ParseException;
+
 
 import ru.geekbrains.photofinder.R;
 import ru.geekbrains.photofinder.utils.DateTimeUtils;
@@ -31,20 +33,7 @@ public class PhotoSearchVkLoader extends AsyncTaskLoader<VKPhotoArray> {
     public PhotoSearchVkLoader(Context context, Bundle bundle) {
         super(context);
         if (bundle != null) {
-            try {
-                longitude = bundle.getDouble(context.getString(R.string.photo_loader_bundle_key_longitude));
-                latitude = bundle.getDouble(context.getString(R.string.photo_loader_bundle_key_latitude));
-                sortBy = PrefUtils.getSearchSortForPreference(context);
-                radius = PrefUtils.getSearchRadiusForPreference(context);
-
-                startDate = DateTimeUtils.convertPrefDataToUnix(
-                        PrefUtils.getSearchStartForPreference(context));
-                endDate = DateTimeUtils.convertPrefDataToUnix(
-                        PrefUtils.getSearchStartForPreference(context));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
+            getDataForSharedPref(bundle, context);
         }
     }
 
@@ -61,7 +50,6 @@ public class PhotoSearchVkLoader extends AsyncTaskLoader<VKPhotoArray> {
         }
     }
 
-
     @Override
     public VKPhotoArray loadInBackground() {
         VKResponse response = NetworkUtils.getPhotos(getContext(), latitude, longitude,
@@ -76,5 +64,31 @@ public class PhotoSearchVkLoader extends AsyncTaskLoader<VKPhotoArray> {
     public void deliverResult(VKPhotoArray data) {
         vkPhotoArray = data;
         super.deliverResult(data);
+    }
+
+    private void getDataForSharedPref(Bundle bundle, Context context) {
+        longitude = bundle.getDouble(context.getString(R.string.photo_loader_bundle_key_longitude));
+        latitude = bundle.getDouble(context.getString(R.string.photo_loader_bundle_key_latitude));
+        sortBy = PrefUtils.getSearchSortForPreference(context);
+        radius = PrefUtils.getSearchRadiusForPreference(context);
+
+        try {
+            startDate = DateTimeUtils.convertPrefDataToUnix(context,
+                    PrefUtils.getSearchStartForPreference(context));
+
+            endDate = DateTimeUtils.convertPrefDataToUnix(context,
+                    PrefUtils.getSearchEndForPreference(context));
+        } catch (ParseException e) {
+            e.printStackTrace();
+
+        } finally {
+            if (startDate == null || startDate.isEmpty()) {
+                startDate = context.getString(R.string.pref_date_start_default_value_unix_time);
+            }
+            if (endDate == null || endDate.isEmpty()) {
+                endDate = String.valueOf(System.currentTimeMillis()/1000);
+            }
+        }
+
     }
 }

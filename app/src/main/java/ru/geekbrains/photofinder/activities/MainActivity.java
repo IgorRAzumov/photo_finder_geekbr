@@ -13,7 +13,6 @@ import com.vk.sdk.api.VKError;
 import ru.geekbrains.photofinder.R;
 
 public class MainActivity extends AppCompatActivity {
-    private static int PHOTO_SEARCH_LOADER_ID = 11;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

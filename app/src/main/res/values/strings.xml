@@ -8,7 +8,7 @@
 
     <string name="default_longitude" translatable="false">-43.1729427749</string>
     <string name="default_latitude" translatable="false">-22.9032315871</string>
-    <string name="default_zoom" translatable="false">17.5</string>
+    <string name="default_zoom" translatable="false">8</string>
 
     <string name="login_vk_button_text">ВОЙТИ В ВК</string>
 
@@ -69,14 +69,11 @@
     <string name="pref_date_category_key" translatable="false">date-category-key</string>
     <string name="pref_date_start_key" translatable="false">pref-start-date</string>
     <string name="pref_date_end_key" translatable="false">pref-end-date</string>
-    <string name="pref_date_min_date" translatable="false">08/31/2010</string>
-    <string name="pref_date_min_date_end" translatable="false">09/31/2010</string>
-  <!--  <string name="pref_date_max_date_default" translatable="false">02/23/2018</string>-->
-
-
-
-
-
+    <string name="pref_date_min_date" translatable="false">10/11/2006</string>
+    <string name="pref_date_min_date_end" translatable="false">10/12/2006</string>
+    <string name="pref_date_start_default_value_unix_time">1160640732</string>
+    <string name="date_picker_date_format">MM/dd/yyyy</string>
+    <!--  <string name="pref_date_max_date_default" translatable="false">02/23/2018</string>-->
 
 
 </resources>
