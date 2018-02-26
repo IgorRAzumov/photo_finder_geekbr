@@ -10,7 +10,7 @@
     <string name="default_latitude" translatable="false">-22.9032315871</string>
     <string name="default_zoom" translatable="false">8</string>
 
-    <string name="login_vk_button_text">ВОЙТИ В ВК</string>
+    <string name="no_login_vk_button_text">ПРОДОЛЖИТЬ БЕЗ АВТОРИЗАЦИИ</string>
 
 
     <string name="vk_access_token_intent_key" translatable="false">access-code-key-intent</string>
@@ -71,8 +71,16 @@
     <string name="pref_date_end_key" translatable="false">pref-end-date</string>
     <string name="pref_date_min_date" translatable="false">10/11/2006</string>
     <string name="pref_date_min_date_end" translatable="false">10/12/2006</string>
-    <string name="pref_date_start_default_value_unix_time">1160640732</string>
-    <string name="date_picker_date_format">MM/dd/yyyy</string>
+    <string name="pref_date_start_default_value_unix_time" translatable="false">1160640732</string>
+    <string name="pref_date_picker_date_format" translatable="false">MM/dd/yyyy</string>
+
+    <string name="vk_photo_array_bundle_key">vk-photo-array-bundle</string>
+    <string name="vk_photo_array_position_bundle_key">vk-photo-array-position-key</string>
+
+    <string name="inbox_fragment_argument_error">inbox fragment args must be not null</string>
+
+    <string name="vk_photo_bundle_key">vk-photo-bundle-key</string>
+    <string name="error_no_photo_url_found">не найдено выбранного вами изображения</string>
     <!--  <string name="pref_date_max_date_default" translatable="false">02/23/2018</string>-->
 
 

@@ -8,7 +8,6 @@ import ru.geekbrains.photofinder.R;
 import ru.geekbrains.photofinder.adapters.PhotoResultAdapter;
 
 
-
 public class PrefUtils {
     public static void writeAdapterTypeToSharedPref(Context context, int type) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(
@@ -42,18 +41,18 @@ public class PrefUtils {
                 context.getResources().getInteger(R.integer.pref_radius_defaul_value));
     }
 
-    public static String  getSearchStartForPreference(Context context) {
+    public static String getSearchStartForPreference(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         return sharedPreferences.getString(context.getString(R.string.pref_date_start_key),
-               context.getString(R.string.pref_date_min_date));
+                context.getString(R.string.pref_date_min_date));
     }
 
-    public static String  getSearchEndForPreference(Context context) {
+    public static String getSearchEndForPreference(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         return sharedPreferences.getString(context.getString(R.string.pref_date_end_key),
-              "");
+                "");
     }
 
 

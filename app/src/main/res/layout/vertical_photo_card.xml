@@ -8,8 +8,8 @@
     android:layout_marginEnd="8dp"
     android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
-    tools:cardCornerRadius="4dp"
-    app:cardElevation="3dp">
+    app:cardElevation="3dp"
+    tools:cardCornerRadius="4dp">
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"

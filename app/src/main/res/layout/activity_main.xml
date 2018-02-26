@@ -3,9 +3,10 @@
     android:id="@+id/fl_main_activity_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <fragment
         android:id="@+id/fr_main_activity_container"
+        class="ru.geekbrains.photofinder.fragments.MainFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        class="ru.geekbrains.photofinder.fragments.MainFragment"/>
+        android:layout_height="match_parent" />
 </FrameLayout>

@@ -19,45 +19,14 @@ import ru.geekbrains.photofinder.R;
 public class PhotoResultAdapter extends RecyclerView.Adapter<PhotoResultAdapter.PhotoCardViewHolder> {
     public static final int GRID_TYPE = 1;
     public static final int LINEAR_TYPE = 2;
-
-    public class PhotoCardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        CardView songCardView;
-        ImageView photoImageView;
-        TextView uploadDateTextView;
-
-        public PhotoCardViewHolder(View itemView, int viewType) {
-            super(itemView);
-            switch (viewType) {
-                case GRID_TYPE:
-                    photoImageView = itemView.findViewById(R.id.iv_horizontal_card_photo);
-                    break;
-                default: //LINEAR_TYPE
-                    songCardView = itemView.findViewById(R.id.cv_vertical_photo_card);
-                    photoImageView = itemView.findViewById(R.id.iv_vertical_card_photo);
-                    uploadDateTextView = itemView.findViewById(R.id.tv_vertical_card_date);
-            }
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            recycleViewOnItemClickListener.onItemRecyclerClick(v, getAdapterPosition());
-        }
-    }
-
-    public interface RecycleViewOnItemClickListener {
-        void onItemRecyclerClick(View v, int position);
-    }
-
-    public static VKPhotoArray photosArray;//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    private VKPhotoArray photosArray;
     private int viewType;
     private RecycleViewOnItemClickListener recycleViewOnItemClickListener;
 
-
     public PhotoResultAdapter(RecycleViewOnItemClickListener
-                                     recycleViewOnItemClickListener) {
+                                      recycleViewOnItemClickListener, VKPhotoArray vkPhotoArray) {
         this.recycleViewOnItemClickListener = recycleViewOnItemClickListener;
-        photosArray = new VKPhotoArray();
+        photosArray = vkPhotoArray;
     }
 
     @Override
@@ -93,7 +62,6 @@ public class PhotoResultAdapter extends RecyclerView.Adapter<PhotoResultAdapter.
         }
     }
 
-
     @Override
     public int getItemViewType(int position) {
         return viewType;
@@ -121,15 +89,44 @@ public class PhotoResultAdapter extends RecyclerView.Adapter<PhotoResultAdapter.
         Picasso
                 .with(context)
                 .load(url)
-               // .resize(targetWidth, targetHeight)
+                // .resize(targetWidth, targetHeight)
                 .into(imageView);
     }
 
     public void setData(VKPhotoArray data) {
-        this.photosArray = data;
+        photosArray = data;
     }
 
     public void setViewType(int type) {
         this.viewType = type;
+    }
+
+    public interface RecycleViewOnItemClickListener {
+        void onItemRecyclerClick(View v, int position);
+    }
+
+    public class PhotoCardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        CardView songCardView;
+        ImageView photoImageView;
+        TextView uploadDateTextView;
+
+        public PhotoCardViewHolder(View itemView, int viewType) {
+            super(itemView);
+            switch (viewType) {
+                case GRID_TYPE:
+                    photoImageView = itemView.findViewById(R.id.iv_horizontal_card_photo);
+                    break;
+                default: //LINEAR_TYPE
+                    songCardView = itemView.findViewById(R.id.cv_vertical_photo_card);
+                    photoImageView = itemView.findViewById(R.id.iv_vertical_card_photo);
+                    uploadDateTextView = itemView.findViewById(R.id.tv_vertical_card_date);
+            }
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            recycleViewOnItemClickListener.onItemRecyclerClick(v, getAdapterPosition());
+        }
     }
 }

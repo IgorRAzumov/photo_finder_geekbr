@@ -18,7 +18,6 @@ import com.google.android.gms.maps.model.LatLng;
 
 import ru.geekbrains.photofinder.R;
 import ru.geekbrains.photofinder.fragments.MapFragment;
-import ru.geekbrains.photofinder.fragments.ResultListFragment;
 
 public class MapActivity extends AppCompatActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener,
@@ -67,10 +66,7 @@ public class MapActivity extends AppCompatActivity implements
         }
         return super.onOptionsItemSelected(item);
     }
-    //вопрос - каждый ли раз, когда мы так стартуем активити с вложенным в него лоадером
-    // - будет запускаться новый лоадер? Вроде, как читал и дебажил - создается новый.
-    // Просто в чем суть - если создается новый каждый раз - все нормю Тогда мы не обрабатываем
-    // изменения в Preference в этом классе. А запрашиваем их из них значения при новом запросе
+
     @Override
     public void onMapClick(LatLng latLng) {
         Intent intent = new Intent(this, ResultActivity.class);
@@ -78,12 +74,6 @@ public class MapActivity extends AppCompatActivity implements
         intent.putExtra(getString(R.string.longitude_intent_key), latLng.longitude);
         startActivity(intent);
     }
-
-    @Override
-    public void onMapReady() {
-
-    }
-
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {

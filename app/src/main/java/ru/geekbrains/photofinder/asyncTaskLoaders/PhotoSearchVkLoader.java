@@ -3,16 +3,12 @@ package ru.geekbrains.photofinder.asyncTaskLoaders;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.content.AsyncTaskLoader;
-import android.text.format.DateUtils;
 
 import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.model.VKPhotoArray;
 
-
 import java.text.ParseException;
-
 
 import ru.geekbrains.photofinder.R;
 import ru.geekbrains.photofinder.utils.DateTimeUtils;
@@ -76,8 +72,13 @@ public class PhotoSearchVkLoader extends AsyncTaskLoader<VKPhotoArray> {
             startDate = DateTimeUtils.convertPrefDataToUnix(context,
                     PrefUtils.getSearchStartForPreference(context));
 
-            endDate = DateTimeUtils.convertPrefDataToUnix(context,
-                    PrefUtils.getSearchEndForPreference(context));
+            String endDateForPreff = PrefUtils.getSearchEndForPreference(context);
+            if (endDateForPreff == null || endDateForPreff.isEmpty()) {
+                endDate = String.valueOf(System.currentTimeMillis() / getContext().getResources()
+                        .getInteger(R.integer.milisec));
+            } else {
+                endDate = DateTimeUtils.convertPrefDataToUnix(context, endDateForPreff);
+            }
         } catch (ParseException e) {
             e.printStackTrace();
 
@@ -86,7 +87,7 @@ public class PhotoSearchVkLoader extends AsyncTaskLoader<VKPhotoArray> {
                 startDate = context.getString(R.string.pref_date_start_default_value_unix_time);
             }
             if (endDate == null || endDate.isEmpty()) {
-                endDate = String.valueOf(System.currentTimeMillis()/1000);
+                endDate = String.valueOf(System.currentTimeMillis() / 1000);
             }
         }
 

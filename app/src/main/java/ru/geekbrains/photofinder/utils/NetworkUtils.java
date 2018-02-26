@@ -25,10 +25,10 @@ public class NetworkUtils {
                 VKParameters.from(
                         VKApiConst.LAT, latitude,
                         VKApiConst.LONG, longitude,
-                        "start_time",startTime,
-                        "end_time",endTime,
-                        VKApiConst.SORT,sort,
-                        "radius",radius,
+                        "start_time", startTime,
+                        "end_time", endTime,
+                        VKApiConst.SORT, sort,
+                        "radius", radius,
                         VKApiConst.VERSION, context.getString(R.string.vk_api_version)));
         request.setModelClass(VKPhotoArray.class);
         request.executeSyncWithListener(new VKRequest.VKRequestListener() {
@@ -50,11 +50,14 @@ public class NetworkUtils {
 
     public static void loadImage(ImageView imageView, String url, Context context, int targetWidth,
                                  int targetHeight) {
-        Picasso
-                .with(context)
-                .load(url)
-                // .resize(targetWidth, targetHeight)
-                .into(imageView);
+        if (url != null) {
+            Picasso
+                    .with(context)
+                    .load(url)
+                    // .resize(targetWidth, targetHeight)
+                    .into(imageView);
+        }
     }
+
 }
 

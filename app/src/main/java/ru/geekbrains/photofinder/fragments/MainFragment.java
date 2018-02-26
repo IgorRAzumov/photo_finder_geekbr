@@ -2,6 +2,7 @@ package ru.geekbrains.photofinder.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +24,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         loginButton = view.findViewById(R.id.bt_login_vk);
@@ -33,7 +34,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {// вот об этом вызове я в main activity писал
-      //   VKSdk.login(getActivity(), SCOPE);
+        //   VKSdk.login(getActivity(), SCOPE);
 
         Intent intent = new Intent(getActivity(), MapActivity.class);
         String accessTokenIntentKey = getString(R.string.vk_access_token_intent_key);

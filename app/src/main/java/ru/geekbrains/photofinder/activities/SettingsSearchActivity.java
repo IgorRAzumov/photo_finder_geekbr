@@ -1,9 +1,9 @@
 package ru.geekbrains.photofinder.activities;
 
+import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
 
 import ru.geekbrains.photofinder.R;
@@ -24,8 +24,8 @@ public class SettingsSearchActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:{
+        switch (item.getItemId()) {
+            case android.R.id.home: {
                 NavUtils.navigateUpFromSameTask(this);
             }
         }

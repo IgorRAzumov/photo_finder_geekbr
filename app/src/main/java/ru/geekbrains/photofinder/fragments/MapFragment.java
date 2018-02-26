@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,24 +25,19 @@ import ru.geekbrains.photofinder.R;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnMapClickListener {
-    public interface OnActivityCallback {
-        void onMapClick(LatLng latLng);
-
-        void onMapReady();
-    }
-
-
+    private ProgressBar progressBar;
     private GoogleMap map;
     private OnActivityCallback onActivityCallback;
-
     public MapFragment() {
 
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        View view = inflater.inflate(R.layout.fragment_map, container, false);
+        progressBar = view.findViewById(R.id.pb_fragment_map_progress);
+        return view;
     }
 
     @Override
@@ -50,6 +47,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 .findFragmentById(R.id.fl_map_fragment_container);
         if (mapFragment != null) {////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             mapFragment.getMapAsync(this);
+            progressBar.setVisibility(View.VISIBLE);
         }
     }
 
@@ -60,7 +58,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             onActivityCallback = (OnActivityCallback) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + getContext().getString(R.string.on_activity_callback__fragment_error));
+                    + getString(R.string.on_activity_callback__fragment_error) +
+                    this.getClass().getSimpleName());
         }
     }
 
@@ -79,7 +78,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        onActivityCallback.onMapReady();
+        progressBar.setVisibility(View.GONE);
         map = googleMap;
         map.setOnMapClickListener(this);
 
@@ -94,12 +93,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
-
     private void setDefaultMapSettings() {
         LatLng defaultLatLng = new LatLng(Double.parseDouble(getString(R.string.default_latitude)),
                 Double.parseDouble(getString(R.string.default_longitude)));
         float zoom = Float.parseFloat(getString(R.string.default_zoom));
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLatLng, zoom));
+
+    }
+
+
+    public interface OnActivityCallback {
+        void onMapClick(LatLng latLng);
 
     }
 }

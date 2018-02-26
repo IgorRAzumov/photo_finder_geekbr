@@ -2,16 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ru.geekbrains.photofinder.fragments.MapFragment">
-
-    <fragment
-        android:id="@+id/fl_map_fragment_container"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    tools:context="ru.geekbrains.photofinder.fragments.ProgressFragment">
 
     <ProgressBar
-        android:id="@+id/pb_fragment_map_progress"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

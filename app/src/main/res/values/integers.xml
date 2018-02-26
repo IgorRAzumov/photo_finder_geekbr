@@ -7,4 +7,6 @@
     <integer name="integer_phto_list_loader_id">11</integer>
     <integer name="pref_radius_defaul_value">500</integer>
     <integer name="request_location_permission_id">13</integer>
+    <integer name="milisec">1000</integer>
+    <integer name="result_activity_chnge_fargment_handler_code">777</integer>
 </resources>
