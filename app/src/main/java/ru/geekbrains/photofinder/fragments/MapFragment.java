@@ -1,6 +1,7 @@
 package ru.geekbrains.photofinder.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -99,6 +100,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         float zoom = Float.parseFloat(getString(R.string.default_zoom));
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLatLng, zoom));
 
+    }
+
+    @SuppressLint("MissingPermission")
+    public void setLocationEnabled(boolean isEnabled) {
+        if(map != null){
+            map.setMyLocationEnabled(isEnabled);
+        }
     }
 
 

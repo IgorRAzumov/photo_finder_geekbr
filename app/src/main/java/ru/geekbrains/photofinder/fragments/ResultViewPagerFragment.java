@@ -18,8 +18,9 @@ import ru.geekbrains.photofinder.adapters.ViewPagerResultAdapter;
 public class ResultViewPagerFragment extends Fragment {
     private ViewPager resultViewPager;
     private ViewPagerResultAdapter resultAdapter;
-    private onActivityCallback listener;
+    private OnActivityCallback onActivityCallback;
     private int position;
+
     public ResultViewPagerFragment() {
 
     }
@@ -54,15 +55,38 @@ public class ResultViewPagerFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_view_pager_result, container, false);
         resultViewPager = view.findViewById(R.id.vp_result_photos_search);
         resultViewPager.setAdapter(resultAdapter);
+
+
+        if (savedInstanceState != null) {
+            int noSavePosition = getResources().getInteger(R.integer.list_result_no_save_instance_position);
+            int lastSavedPosition = savedInstanceState.getInt(
+                    getString(R.string.list_result_position_save_key), noSavePosition
+            );
+
+            if (lastSavedPosition > noSavePosition) {
+                position = lastSavedPosition;
+            }
+        }
+
+
         resultViewPager.setCurrentItem(position);
         return view;
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        if (resultViewPager != null) {
+            outState.putInt(getString(R.string.list_result_position_save_key),
+                    resultViewPager.getCurrentItem());
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof onActivityCallback) {
-            listener = (onActivityCallback) context;
+        if (context instanceof OnActivityCallback) {
+            onActivityCallback = (OnActivityCallback) context;
         } else {
             throw new RuntimeException(context.toString()
                     + getString(R.string.on_activity_callback__fragment_error) +
@@ -73,11 +97,15 @@ public class ResultViewPagerFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        listener = null;
+        onActivityCallback = null;
     }
 
-    public interface onActivityCallback {
+    public void onBackPressed() {
+        onActivityCallback.switchViewPagerToRecycler(resultViewPager.getCurrentItem());
+    }
 
+    public interface OnActivityCallback {
+        void switchViewPagerToRecycler(int position);
     }
 
 

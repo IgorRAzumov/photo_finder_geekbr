@@ -22,7 +22,7 @@ import ru.geekbrains.photofinder.fragments.ResultListFragment;
 import ru.geekbrains.photofinder.fragments.ResultViewPagerFragment;
 
 public class ResultActivity extends AppCompatActivity implements
-        ResultListFragment.OnActivityCallback, ResultViewPagerFragment.onActivityCallback,
+        ResultListFragment.OnActivityCallback, ResultViewPagerFragment.OnActivityCallback,
         LoaderManager.LoaderCallbacks<VKPhotoArray> {
     private static final int SHOW_ERROR_MESSAGE_HANDLER_CODE = 222;
     private static final int CHANGE_FRAGMENT_MESSAGE_HANDLER_CODE = 111;
@@ -130,10 +130,19 @@ public class ResultActivity extends AppCompatActivity implements
         }
     }
 
-    private void getDataFromIntent() {
-        Intent intent = getIntent();
-        longitude = intent.getDoubleExtra(getString(R.string.longitude_intent_key), 0);
-        latitude = intent.getDoubleExtra(getString(R.string.latitude_intent_key), 0);
+    @Override
+    public void switchViewPagerToRecycler(int position) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.fl_list_result_container);
+        if (fragment == null || !(fragment instanceof ResultListFragment)) {
+            ResultListFragment resultListFragment = ResultListFragment.newInstance(
+                    getString(R.string.vk_photo_array_bundle_key), vkPhotoArray,
+                    getString(R.string.vk_photo_array_position_bundle_key), position);
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fl_list_result_container, resultListFragment)
+                    .commit();
+        }
     }
 
     private void switchProgressToResult(VKPhotoArray vkPhotoArray) {
@@ -142,13 +151,19 @@ public class ResultActivity extends AppCompatActivity implements
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.fl_list_result_container);
         if (fragment == null || !(fragment instanceof ResultListFragment)) {
-            ResultListFragment resultListFragment =ResultListFragment.newInstance(
+            ResultListFragment resultListFragment = ResultListFragment.newInstance(
                     getString(R.string.vk_photo_array_bundle_key), vkPhotoArray);
 
             fragmentManager.beginTransaction()
                     .replace(R.id.fl_list_result_container, resultListFragment)
                     .commit();
         }
+    }
+
+    private void getDataFromIntent() {
+        Intent intent = getIntent();
+        longitude = intent.getDoubleExtra(getString(R.string.longitude_intent_key), 0);
+        latitude = intent.getDoubleExtra(getString(R.string.latitude_intent_key), 0);
     }
 
     private static class ResultActivityHandler extends Handler {
@@ -170,13 +185,40 @@ public class ResultActivity extends AppCompatActivity implements
                 }
                 case SHOW_ERROR_MESSAGE_HANDLER_CODE: {
                     ResultActivity resultActivity = reference.get();
-                    if (resultActivity != null)
+                    if (resultActivity != null) {
                         resultActivity.showErrorMessage((String) msg.obj);
-                    resultActivity.onBackPressed();
-                    break;
+                        resultActivity.onBackPressed();
+                        break;
+                    }
+                }
+                default: {
+                    super.handleMessage(msg);
                 }
             }
-            super.handleMessage(msg);
+        }
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.fl_list_result_container);
+        if (fragment != null) {
+            if (fragment instanceof ResultViewPagerFragment) {
+                ResultViewPagerFragment resultViewPagerFragment = (ResultViewPagerFragment) fragment;
+                resultViewPagerFragment.onBackPressed();
+            } else if (fragment instanceof ResultListFragment) {
+                ResultListFragment resultListFragment = (ResultListFragment) fragment;
+                if (resultListFragment.isNeedBackPressed()) {
+                    resultListFragment.onBackPressed();
+                } else {
+                    super.onBackPressed();
+                }
+            } else {
+                super.onBackPressed();
+            }
+        } else {
+            super.onBackPressed();
         }
     }
 }

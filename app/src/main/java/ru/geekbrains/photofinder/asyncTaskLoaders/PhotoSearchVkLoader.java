@@ -1,6 +1,5 @@
 package ru.geekbrains.photofinder.asyncTaskLoaders;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
@@ -14,7 +13,6 @@ import ru.geekbrains.photofinder.R;
 import ru.geekbrains.photofinder.utils.DateTimeUtils;
 import ru.geekbrains.photofinder.utils.NetworkUtils;
 import ru.geekbrains.photofinder.utils.PrefUtils;
-
 
 public class PhotoSearchVkLoader extends AsyncTaskLoader<VKPhotoArray> {
     private VKPhotoArray vkPhotoArray = null;

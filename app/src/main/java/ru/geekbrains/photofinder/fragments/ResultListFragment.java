@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import com.vk.sdk.api.model.VKPhotoArray;
 
 import ru.geekbrains.photofinder.R;
+import ru.geekbrains.photofinder.activities.ResultActivity;
 import ru.geekbrains.photofinder.adapters.PhotoResultAdapter;
 import ru.geekbrains.photofinder.utils.PrefUtils;
 
@@ -43,6 +44,10 @@ public class ResultListFragment extends Fragment implements
         if (bundle != null) {
             VKPhotoArray vkPhotoArray = bundle.getParcelable(
                     getString(R.string.vk_photo_array_bundle_key));
+
+            lastSavedPosition = bundle.getInt(getString(R.string.vk_photo_array_position_bundle_key),
+                    getResources().getInteger(R.integer.list_result_no_save_instance_position));
+
             initPhotoResultAdapter(vkPhotoArray);
         } else {
             throw new RuntimeException(getString(R.string.inbox_fragment_argument_error) +
@@ -76,15 +81,17 @@ public class ResultListFragment extends Fragment implements
 
         resultRecyclerView.setAdapter(photoResultAdapter);
 
+        int noSavePosition = getResources().getInteger(R.integer.list_result_no_save_instance_position);
         if (savedInstanceState != null) {
-            int noSavePosition = getResources().getInteger(R.integer.list_result_no_save_instance_position);
             lastSavedPosition = savedInstanceState.getInt(
                     getString(R.string.list_result_position_save_key), noSavePosition
             );
-            if (lastSavedPosition > noSavePosition) {
-                restoreRecyclerState();
-            }
         }
+
+        if (lastSavedPosition > noSavePosition) {
+            restoreRecyclerState();
+        }
+
         return view;
     }
 
@@ -118,7 +125,6 @@ public class ResultListFragment extends Fragment implements
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         if (photoResultAdapter != null) {
             int fistVisiblePosition;
             if (photoResultAdapter.getItemViewType(getResources()
@@ -130,6 +136,7 @@ public class ResultListFragment extends Fragment implements
             }
             outState.putInt(getString(R.string.list_result_position_save_key), fistVisiblePosition);
         }
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -204,12 +211,32 @@ public class ResultListFragment extends Fragment implements
         }
     }
 
-    public static ResultListFragment newInstance(String vkPhotoArrayBundleKey, VKPhotoArray vkPhotoArray) {
+    public static ResultListFragment newInstance(String vkPhotoArrayBundleKey,
+                                                 VKPhotoArray vkPhotoArray) {
         ResultListFragment resultListFragment = new ResultListFragment();
         Bundle arguments = new Bundle();
         arguments.putParcelable(vkPhotoArrayBundleKey, vkPhotoArray);
         resultListFragment.setArguments(arguments);
         return resultListFragment;
+    }
+
+    public static ResultListFragment newInstance(String vkPhotoArrayBundleKey,
+                                                 VKPhotoArray vkPhotoArray,
+                                                 String photoPositionBundleKey, int position) {
+        ResultListFragment resultListFragment = new ResultListFragment();
+        Bundle arguments = new Bundle();
+        arguments.putParcelable(vkPhotoArrayBundleKey, vkPhotoArray);
+        arguments.putInt(photoPositionBundleKey, position);
+        resultListFragment.setArguments(arguments);
+        return resultListFragment;
+    }
+
+    public void onBackPressed() {
+            switchRecyclerViewLayoutManager();
+    }
+
+    public boolean isNeedBackPressed() {
+        return resultRecyclerView.getLayoutManager() == gridLayoutManager;
     }
 
     public interface OnActivityCallback {
