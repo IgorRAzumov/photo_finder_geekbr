@@ -16,7 +16,8 @@ public class DateTimeUtils {
         DateFormat dateFormat = new SimpleDateFormat(context.getString(
                 R.string.pref_date_picker_date_format), Locale.getDefault());
         Date date = dateFormat.parse(inboxDate);
-        long unixTime = date.getTime() / 1000;
+        long unixTime = date.getTime() / context.getResources().getInteger(
+                R.integer.millisecond_in_second);
         return String.valueOf(unixTime);
     }
 }

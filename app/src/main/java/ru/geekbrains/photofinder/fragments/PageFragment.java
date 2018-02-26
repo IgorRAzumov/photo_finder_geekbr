@@ -24,10 +24,10 @@ public class PageFragment extends Fragment {
 
     }
 
-    public static PageFragment newInstance(String bundleKey, VKApiPhoto vkApiPhoto) {
+    public static PageFragment newInstance(String vkApiBundleKey, VKApiPhoto vkApiPhoto) {
         PageFragment fragment = new PageFragment();
         Bundle args = new Bundle();
-        args.putParcelable(bundleKey, vkApiPhoto);
+        args.putParcelable(vkApiBundleKey, vkApiPhoto);
         fragment.setArguments(args);
         return fragment;
     }

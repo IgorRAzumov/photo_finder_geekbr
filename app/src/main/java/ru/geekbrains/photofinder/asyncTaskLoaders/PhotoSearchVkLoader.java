@@ -72,12 +72,12 @@ public class PhotoSearchVkLoader extends AsyncTaskLoader<VKPhotoArray> {
             startDate = DateTimeUtils.convertPrefDataToUnix(context,
                     PrefUtils.getSearchStartForPreference(context));
 
-            String endDateForPreff = PrefUtils.getSearchEndForPreference(context);
-            if (endDateForPreff == null || endDateForPreff.isEmpty()) {
+            String endDateForPref = PrefUtils.getSearchEndForPreference(context);
+            if (endDateForPref == null || endDateForPref.isEmpty()) {
                 endDate = String.valueOf(System.currentTimeMillis() / getContext().getResources()
-                        .getInteger(R.integer.milisec));
+                        .getInteger(R.integer.millisecond_in_second));
             } else {
-                endDate = DateTimeUtils.convertPrefDataToUnix(context, endDateForPreff);
+                endDate = DateTimeUtils.convertPrefDataToUnix(context, endDateForPref);
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -87,7 +87,8 @@ public class PhotoSearchVkLoader extends AsyncTaskLoader<VKPhotoArray> {
                 startDate = context.getString(R.string.pref_date_start_default_value_unix_time);
             }
             if (endDate == null || endDate.isEmpty()) {
-                endDate = String.valueOf(System.currentTimeMillis() / 1000);
+                endDate = String.valueOf(System.currentTimeMillis() / context.getResources()
+                        .getInteger(R.integer.millisecond_in_second));
             }
         }
 

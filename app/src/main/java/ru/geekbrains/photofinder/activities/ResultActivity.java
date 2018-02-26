@@ -26,6 +26,7 @@ public class ResultActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<VKPhotoArray> {
     private static final int SHOW_ERROR_MESSAGE_HANDLER_CODE = 222;
     private static final int CHANGE_FRAGMENT_MESSAGE_HANDLER_CODE = 111;
+
     private double longitude;
     private double latitude;
     private VKPhotoArray vkPhotoArray;
@@ -39,8 +40,9 @@ public class ResultActivity extends AppCompatActivity implements
         getDataFromIntent();
 
         handler = new ResultActivityHandler(new WeakReference<>(this));
+
         getSupportLoaderManager().initLoader(getResources().getInteger(
-                R.integer.integer_phto_list_loader_id), null, this);
+                R.integer.photo_list_loader_id), null, this);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.fl_list_result_container);
@@ -54,7 +56,7 @@ public class ResultActivity extends AppCompatActivity implements
 
     @Override
     public Loader<VKPhotoArray> onCreateLoader(int id, Bundle args) {
-        if (getResources().getInteger(R.integer.integer_phto_list_loader_id) == id) {
+        if (getResources().getInteger(R.integer.photo_list_loader_id) == id) {
             Bundle bundle = new Bundle();
             bundle.putDouble(getString(R.string.photo_loader_bundle_key_longitude), longitude);
             bundle.putDouble(getString(R.string.photo_loader_bundle_key_latitude), latitude);
@@ -115,14 +117,17 @@ public class ResultActivity extends AppCompatActivity implements
     @Override
     public void switchRecyclerToViewPager(int position) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        ResultViewPagerFragment resultViewPagerFragment = ResultViewPagerFragment.newInstance(
-                getString(R.string.vk_photo_array_bundle_key), vkPhotoArray,
-                getString(R.string.vk_photo_array_position_bundle_key), position);
+        Fragment fragment = fragmentManager.findFragmentById(R.id.fl_list_result_container);
+        if (fragment == null || !(fragment instanceof ResultViewPagerFragment)) {
+            ResultViewPagerFragment resultViewPagerFragment = ResultViewPagerFragment.newInstance(
+                    getString(R.string.vk_photo_array_bundle_key), vkPhotoArray,
+                    getString(R.string.vk_photo_array_position_bundle_key), position);
 
-        fragmentManager.beginTransaction()
-                .replace(R.id.fl_list_result_container, resultViewPagerFragment)
-                .addToBackStack(null)
-                .commit();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fl_list_result_container, resultViewPagerFragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 
     private void getDataFromIntent() {
@@ -134,16 +139,16 @@ public class ResultActivity extends AppCompatActivity implements
     private void switchProgressToResult(VKPhotoArray vkPhotoArray) {
         this.vkPhotoArray = vkPhotoArray;
 
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(getString(R.string.vk_photo_array_bundle_key), vkPhotoArray);
-
         FragmentManager fragmentManager = getSupportFragmentManager();
-        ResultListFragment fragment = new ResultListFragment();
-        fragment.setArguments(bundle);
+        Fragment fragment = fragmentManager.findFragmentById(R.id.fl_list_result_container);
+        if (fragment == null || !(fragment instanceof ResultListFragment)) {
+            ResultListFragment resultListFragment =ResultListFragment.newInstance(
+                    getString(R.string.vk_photo_array_bundle_key), vkPhotoArray);
 
-        fragmentManager.beginTransaction()
-                .replace(R.id.fl_list_result_container, fragment)
-                .commit();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fl_list_result_container, resultListFragment)
+                    .commit();
+        }
     }
 
     private static class ResultActivityHandler extends Handler {
@@ -174,5 +179,4 @@ public class ResultActivity extends AppCompatActivity implements
             super.handleMessage(msg);
         }
     }
-
 }

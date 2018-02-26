@@ -10,8 +10,7 @@
     <string name="default_latitude" translatable="false">-22.9032315871</string>
     <string name="default_zoom" translatable="false">8</string>
 
-    <string name="no_login_vk_button_text">ПРОДОЛЖИТЬ БЕЗ АВТОРИЗАЦИИ</string>
-
+    <string name="main_fragment_no_login_vk_button_text">ПРОДОЛЖИТЬ БЕЗ АВТОРИЗАЦИИ</string>
 
     <string name="vk_access_token_intent_key" translatable="false">access-code-key-intent</string>
     <string name="latitude_intent_key" translatable="false">latitude-intent-key</string>
@@ -27,6 +26,8 @@
 
     <string name="error_request">Ошибка запроса. Попробуйте еще раз.</string>
     <string name="authorization_error">Ошибка авторизации. Попробуйте еще раз</string>
+
+    <string name="inbox_fragment_argument_error">inbox fragment args must be not null</string>
     <string name="list_result_fragment_loader_id_error">Loader Not Implemented:</string>
     <string name="on_activity_callback__fragment_error">must implement OnActivityCallback</string>
 
@@ -74,14 +75,18 @@
     <string name="pref_date_start_default_value_unix_time" translatable="false">1160640732</string>
     <string name="pref_date_picker_date_format" translatable="false">MM/dd/yyyy</string>
 
-    <string name="vk_photo_array_bundle_key">vk-photo-array-bundle</string>
-    <string name="vk_photo_array_position_bundle_key">vk-photo-array-position-key</string>
+    <string name="vk_photo_array_bundle_key" translatable="false">vk-photo-array-bundle</string>
+    <string name="vk_photo_array_position_bundle_key" translatable="false">vk-photo-array-position-key</string>
+    <string name="vk_photo_bundle_key" translatable="false">vk-photo-bundle-key</string>
 
-    <string name="inbox_fragment_argument_error">inbox fragment args must be not null</string>
 
-    <string name="vk_photo_bundle_key">vk-photo-bundle-key</string>
+
+
     <string name="error_no_photo_url_found">не найдено выбранного вами изображения</string>
-    <!--  <string name="pref_date_max_date_default" translatable="false">02/23/2018</string>-->
+
+    <string name="vk_api_const_start_time" translatable="false">start time</string>
+    <string name="vk_api_const_end_time" translatable="false">end time</string>
+    <string name="vk_api_const_radius"  translatable="false">radius</string>
 
 
 </resources>

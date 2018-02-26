@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="com_vk_sdk_AppId">6372326</integer>
+
     <integer name="list_result_no_save_instance_position">-1</integer>
+
     <integer name="span_count_grid_result_portr">2</integer>
+
     <integer name="list_result_default_number_view_type_check">1</integer>
-    <integer name="integer_phto_list_loader_id">11</integer>
-    <integer name="pref_radius_defaul_value">500</integer>
+
+    <integer name="photo_list_loader_id">11</integer>
+
+    <integer name="pref_radius_defaul_value">50</integer>
+
     <integer name="request_location_permission_id">13</integer>
-    <integer name="milisec">1000</integer>
-    <integer name="result_activity_chnge_fargment_handler_code">777</integer>
+
+
+    <integer name="millisecond_in_second">1000</integer>
 </resources>

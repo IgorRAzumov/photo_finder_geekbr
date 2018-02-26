@@ -25,10 +25,10 @@ public class NetworkUtils {
                 VKParameters.from(
                         VKApiConst.LAT, latitude,
                         VKApiConst.LONG, longitude,
-                        "start_time", startTime,
-                        "end_time", endTime,
+                        context.getString(R.string.vk_api_const_start_time), startTime,
+                        context.getString(R.string.vk_api_const_end_time), endTime,
                         VKApiConst.SORT, sort,
-                        "radius", radius,
+                        context.getString(R.string.vk_api_const_radius), radius,
                         VKApiConst.VERSION, context.getString(R.string.vk_api_version)));
         request.setModelClass(VKPhotoArray.class);
         request.executeSyncWithListener(new VKRequest.VKRequestListener() {

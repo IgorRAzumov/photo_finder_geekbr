@@ -31,6 +31,7 @@ public class ResultListFragment extends Fragment implements
     private PhotoResultAdapter photoResultAdapter;
     private LinearLayoutManager linearLayoutManager;
     private GridLayoutManager gridLayoutManager;
+
     public ResultListFragment() {
     }
 
@@ -54,7 +55,6 @@ public class ResultListFragment extends Fragment implements
         gridLayoutManager = new GridLayoutManager(getContext(), getResources()
                 .getInteger(R.integer.span_count_grid_result_portr));
         linearLayoutManager = new LinearLayoutManager(getContext());
-        photoResultAdapter.setData(vkPhotoArray);
     }
 
     @Override
@@ -68,7 +68,6 @@ public class ResultListFragment extends Fragment implements
 
         int viewType = PrefUtils.getViewTypeForPreference(getActivity());//PhotoResultAdapter.LINEAR_TYPE;
         photoResultAdapter.setViewType(viewType);
-
         if (viewType == PhotoResultAdapter.LINEAR_TYPE) {
             resultRecyclerView.setLayoutManager(linearLayoutManager);
         } else {
@@ -77,7 +76,15 @@ public class ResultListFragment extends Fragment implements
 
         resultRecyclerView.setAdapter(photoResultAdapter);
 
-        loadSettings(savedInstanceState);
+        if (savedInstanceState != null) {
+            int noSavePosition = getResources().getInteger(R.integer.list_result_no_save_instance_position);
+            lastSavedPosition = savedInstanceState.getInt(
+                    getString(R.string.list_result_position_save_key), noSavePosition
+            );
+            if (lastSavedPosition > noSavePosition) {
+                restoreRecyclerState();
+            }
+        }
         return view;
     }
 
@@ -88,7 +95,6 @@ public class ResultListFragment extends Fragment implements
 
     }
 
-    //трабл - рписание ниже invalidateoptionsmenu - не помог, вроде
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (photoResultAdapter != null) {
@@ -97,7 +103,6 @@ public class ResultListFragment extends Fragment implements
                     int viewType = photoResultAdapter.getItemViewType(getResources().getInteger(
                             R.integer.list_result_default_number_view_type_check));
 
-                    //не работает/ я так понимаю,  с особенностями размещения в франментах?
                     if (viewType == PhotoResultAdapter.LINEAR_TYPE) {
                         item.setIcon(R.drawable.ic_action_switch_view_type_linear);
                     } else {
@@ -171,19 +176,6 @@ public class ResultListFragment extends Fragment implements
         }
     }
 
-    private void loadSettings(Bundle savedInstanceState) {
-        lastSavedPosition = getResources().getInteger(R.integer.list_result_no_save_instance_position);
-
-        if (savedInstanceState != null) {
-            lastSavedPosition = savedInstanceState.getInt(
-                    getString(R.string.list_result_position_save_key),
-                    getResources().getInteger(R.integer.list_result_no_save_instance_position));
-            if (lastSavedPosition > getResources().getInteger(
-                    R.integer.list_result_no_save_instance_position)) {
-                restoreRecyclerState();
-            }
-        }
-    }
 
     private void switchRecyclerViewLayoutManager() {
         boolean isGrid = resultRecyclerView.getLayoutManager() == gridLayoutManager;
@@ -210,6 +202,14 @@ public class ResultListFragment extends Fragment implements
         if (getActivity() != null) {
             getActivity().invalidateOptionsMenu();
         }
+    }
+
+    public static ResultListFragment newInstance(String vkPhotoArrayBundleKey, VKPhotoArray vkPhotoArray) {
+        ResultListFragment resultListFragment = new ResultListFragment();
+        Bundle arguments = new Bundle();
+        arguments.putParcelable(vkPhotoArrayBundleKey, vkPhotoArray);
+        resultListFragment.setArguments(arguments);
+        return resultListFragment;
     }
 
     public interface OnActivityCallback {
