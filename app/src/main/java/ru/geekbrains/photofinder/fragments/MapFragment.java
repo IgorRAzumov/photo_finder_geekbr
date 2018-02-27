@@ -29,6 +29,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private ProgressBar progressBar;
     private GoogleMap map;
     private OnActivityCallback onActivityCallback;
+
     public MapFragment() {
 
     }
@@ -91,6 +92,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             } else {
                 setDefaultMapSettings();
             }
+        } else {
+            map.setMyLocationEnabled(true);
         }
     }
 
@@ -104,7 +107,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @SuppressLint("MissingPermission")
     public void setLocationEnabled(boolean isEnabled) {
-        if(map != null){
+        if (map != null) {
             map.setMyLocationEnabled(isEnabled);
         }
     }

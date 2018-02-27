@@ -6,7 +6,7 @@
     tools:context="ru.geekbrains.photofinder.activities.ResultActivity">
 
     <FrameLayout
-        android:id="@+id/fl_list_result_container"
+        android:id="@+id/fl_result_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

@@ -80,13 +80,11 @@
     <string name="vk_photo_bundle_key" translatable="false">vk-photo-bundle-key</string>
 
 
-
-
     <string name="error_no_photo_url_found">не найдено выбранного вами изображения</string>
 
     <string name="vk_api_const_start_time" translatable="false">start time</string>
     <string name="vk_api_const_end_time" translatable="false">end time</string>
-    <string name="vk_api_const_radius"  translatable="false">radius</string>
+    <string name="vk_api_const_radius" translatable="false">radius</string>
 
 
 </resources>

@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import com.vk.sdk.api.model.VKPhotoArray;
 
 import ru.geekbrains.photofinder.R;
-import ru.geekbrains.photofinder.activities.ResultActivity;
 import ru.geekbrains.photofinder.adapters.PhotoResultAdapter;
 import ru.geekbrains.photofinder.utils.PrefUtils;
 
@@ -36,10 +35,31 @@ public class ResultListFragment extends Fragment implements
     public ResultListFragment() {
     }
 
+    public static ResultListFragment newInstance(String vkPhotoArrayBundleKey,
+                                                 VKPhotoArray vkPhotoArray) {
+        ResultListFragment resultListFragment = new ResultListFragment();
+        Bundle arguments = new Bundle();
+        arguments.putParcelable(vkPhotoArrayBundleKey, vkPhotoArray);
+        resultListFragment.setArguments(arguments);
+        return resultListFragment;
+    }
+
+    public static ResultListFragment newInstance(String vkPhotoArrayBundleKey,
+                                                 VKPhotoArray vkPhotoArray,
+                                                 String photoPositionBundleKey, int position) {
+        ResultListFragment resultListFragment = new ResultListFragment();
+        Bundle arguments = new Bundle();
+        arguments.putParcelable(vkPhotoArrayBundleKey, vkPhotoArray);
+        arguments.putInt(photoPositionBundleKey, position);
+        resultListFragment.setArguments(arguments);
+        return resultListFragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
         Bundle bundle = getArguments();
         if (bundle != null) {
             VKPhotoArray vkPhotoArray = bundle.getParcelable(
@@ -97,30 +117,32 @@ public class ResultListFragment extends Fragment implements
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.result_list_menu, menu);
-
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (photoResultAdapter != null) {
-            switch (item.getItemId()) {
-                case (R.id.action_change_view): {
+        switch (item.getItemId()) {
+            case (R.id.action_change_view): {
+                if (photoResultAdapter != null) {
+                    switchRecyclerViewLayoutManager();
+
                     int viewType = photoResultAdapter.getItemViewType(getResources().getInteger(
                             R.integer.list_result_default_number_view_type_check));
-
                     if (viewType == PhotoResultAdapter.LINEAR_TYPE) {
                         item.setIcon(R.drawable.ic_action_switch_view_type_linear);
                     } else {
                         item.setIcon(R.drawable.ic_action_switch_view_type_grid);
                     }
-                    switchRecyclerViewLayoutManager();
-                    return true;
                 }
+                return true;
+            }
+            default: {
+                return super.onOptionsItemSelected(item);
             }
         }
-        return super.onOptionsItemSelected(item);
+
     }
 
     @Override
@@ -183,60 +205,39 @@ public class ResultListFragment extends Fragment implements
         }
     }
 
-
     private void switchRecyclerViewLayoutManager() {
         boolean isGrid = resultRecyclerView.getLayoutManager() == gridLayoutManager;
         int fistVisiblePosition;
+
         if (!isGrid) {
             fistVisiblePosition = linearLayoutManager.findFirstVisibleItemPosition();
             resultRecyclerView.setLayoutManager(gridLayoutManager);
             photoResultAdapter.setViewType(PhotoResultAdapter.GRID_TYPE);
-            onDataChange();
             gridLayoutManager.scrollToPosition(fistVisiblePosition);
-
         } else {
             fistVisiblePosition = gridLayoutManager.findFirstVisibleItemPosition();
             resultRecyclerView.setLayoutManager(linearLayoutManager);
             photoResultAdapter.setViewType(PhotoResultAdapter.LINEAR_TYPE);
-            onDataChange();
             linearLayoutManager.scrollToPosition(fistVisiblePosition);
         }
+        onDataChange();
     }
 
     private void onDataChange() {
         photoResultAdapter.notifyDataSetChanged();
         resultRecyclerView.invalidateItemDecorations();
+        resultRecyclerView.invalidate();
         if (getActivity() != null) {
             getActivity().invalidateOptionsMenu();
         }
     }
 
-    public static ResultListFragment newInstance(String vkPhotoArrayBundleKey,
-                                                 VKPhotoArray vkPhotoArray) {
-        ResultListFragment resultListFragment = new ResultListFragment();
-        Bundle arguments = new Bundle();
-        arguments.putParcelable(vkPhotoArrayBundleKey, vkPhotoArray);
-        resultListFragment.setArguments(arguments);
-        return resultListFragment;
-    }
-
-    public static ResultListFragment newInstance(String vkPhotoArrayBundleKey,
-                                                 VKPhotoArray vkPhotoArray,
-                                                 String photoPositionBundleKey, int position) {
-        ResultListFragment resultListFragment = new ResultListFragment();
-        Bundle arguments = new Bundle();
-        arguments.putParcelable(vkPhotoArrayBundleKey, vkPhotoArray);
-        arguments.putInt(photoPositionBundleKey, position);
-        resultListFragment.setArguments(arguments);
-        return resultListFragment;
-    }
-
     public void onBackPressed() {
-            switchRecyclerViewLayoutManager();
+        switchRecyclerViewLayoutManager();
     }
 
     public boolean isNeedBackPressed() {
-        return resultRecyclerView.getLayoutManager() == gridLayoutManager;
+        return resultRecyclerView.getLayoutManager() != gridLayoutManager;
     }
 
     public interface OnActivityCallback {

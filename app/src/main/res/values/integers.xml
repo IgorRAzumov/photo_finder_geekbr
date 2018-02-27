@@ -4,7 +4,7 @@
 
     <integer name="list_result_no_save_instance_position">-1</integer>
 
-    <integer name="span_count_grid_result_portr">2</integer>
+    <integer name="span_count_grid_result_portr">3</integer>
 
     <integer name="list_result_default_number_view_type_check">1</integer>
 
