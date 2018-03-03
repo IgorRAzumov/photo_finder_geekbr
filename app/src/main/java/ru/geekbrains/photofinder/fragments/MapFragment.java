@@ -1,7 +1,6 @@
 package ru.geekbrains.photofinder.fragments;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -15,20 +14,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import ru.geekbrains.photofinder.R;
 
 
 public class MapFragment extends Fragment implements OnMapReadyCallback,
-        GoogleMap.OnMapClickListener {
+        GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener {
+    private static final int REQUEST_LOCATION_PERMISSIONS_ID = 13;
+
     private ProgressBar progressBar;
     private GoogleMap map;
     private OnActivityCallback onActivityCallback;
+    private Marker marker;
+
 
     public MapFragment() {
 
@@ -39,19 +46,48 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         progressBar = view.findViewById(R.id.pb_fragment_map_progress);
+        progressBar.setVisibility(View.VISIBLE);
+
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if (getActivity() != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                    ContextCompat.checkSelfPermission(getActivity(),
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        getResources().getInteger(R.integer.request_location_permission_id));
+            } else {
+                startMapFragment();
+            }
+        }
+    }
+
+    private void startMapFragment() {
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.fl_map_fragment_container);
         if (mapFragment != null) {////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             mapFragment.getMapAsync(this);
-            progressBar.setVisibility(View.VISIBLE);
         }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_LOCATION_PERMISSIONS_ID: {
+                startMapFragment();
+            }
+            default: {
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
+        }
+    }
+
 
     @Override
     public void onAttach(Context context) {
@@ -75,6 +111,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public void onMapClick(LatLng latLng) {
         if (onActivityCallback != null) {
             onActivityCallback.onMapClick(latLng);
+            if (marker == null) {
+                marker = map.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .alpha(0.7f));
+            } else {
+                marker.setPosition(latLng);
+            }
+
         }
     }
 
@@ -83,6 +127,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         progressBar.setVisibility(View.GONE);
         map = googleMap;
         map.setOnMapClickListener(this);
+        map.setOnMarkerClickListener(this);
+
+        UiSettings uiSettings = map.getUiSettings();
+        uiSettings.setZoomControlsEnabled(true);
+        uiSettings.setCompassEnabled(false);
+        uiSettings.setMapToolbarEnabled(false);
 
         Context context = getContext();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null) {
@@ -105,13 +155,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     }
 
-    @SuppressLint("MissingPermission")
-    public void setLocationEnabled(boolean isEnabled) {
-        if (map != null) {
-            map.setMyLocationEnabled(isEnabled);
-        }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        onActivityCallback.onMapClick(marker.getPosition());
+        return false;
     }
 
+    public void onPlaceSelected(Place place) {
+        if (map != null) {
+            LatLng latLng = place.getLatLng();
+            onMapClick(latLng);
+            map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        }
+    }
 
     public interface OnActivityCallback {
         void onMapClick(LatLng latLng);

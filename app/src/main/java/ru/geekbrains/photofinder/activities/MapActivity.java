@@ -1,77 +1,51 @@
 package ru.geekbrains.photofinder.activities;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
 
 import ru.geekbrains.photofinder.R;
 import ru.geekbrains.photofinder.fragments.MapFragment;
 
 public class MapActivity extends AppCompatActivity implements
-        SharedPreferences.OnSharedPreferenceChangeListener,
         ru.geekbrains.photofinder.fragments.MapFragment.OnActivityCallback {
-    private static final int REQUEST_LOCATION_PERMISSIONS_ID = 13;
-//    private String accessToken;
+    int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+
+    private String accessToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-//        accessToken = getIntent().getStringExtra(getString(R.string.vk_access_token_intent_key));
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        getResources().getInteger(R.integer.request_location_permission_id));
-            }
+        Intent intent = getIntent();
+        if (intent != null) {
+            accessToken = getIntent().getStringExtra(getString(R.string.vk_access_token_intent_key));
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.fl_map_fragment_container);
-        if (fragment == null) {
+        if (fragment == null)
+
+        {
             fragment = new MapFragment();
             fragmentManager.beginTransaction()
                     .add(R.id.fl_map_fragment_container, fragment)
                     .commit();
+
         }
     }
-
-   /* @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_LOCATION_PERMISSIONS_ID: {
-                if (ActivityCompat.checkSelfPermission(this,
-                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                        && ActivityCompat.checkSelfPermission(this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    Fragment fragment = fragmentManager.findFragmentById(R.id.fl_map_fragment_container);
-                    if (fragment != null && fragment instanceof MapFragment) {
-                        MapFragment mapFragment = (MapFragment) fragment;
-                        mapFragment.setLocationEnabled(getResources().getBoolean(R.bool.location_enable));
-                    }
-
-                }
-            }
-            default: {
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            }
-        }
-    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -83,9 +57,12 @@ public class MapActivity extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_find_settings: {
-                Intent intent = new Intent(this, SettingsSearchActivity.class);
-                startActivity(intent);
+            case R.id.action_search_settings: {
+                actionSearchSettingsClick();
+                return true;
+            }
+            case R.id.action_find: {
+                actionFindClick();
                 return true;
             }
             default: {
@@ -94,28 +71,51 @@ public class MapActivity extends AppCompatActivity implements
         }
     }
 
+    private void actionSearchSettingsClick() {
+        Intent intent = new Intent(this, SettingsSearchActivity.class);
+        startActivity(intent);
+    }
+
+    private void actionFindClick() {
+        try {
+            Intent intent =
+                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                            .build(this);
+            startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+            showErrorMessage(getString(R.string.error_request_autocomplite));
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlaceAutocomplete.getPlace(this, data);
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                Fragment fragment = fragmentManager.findFragmentById(R.id.fl_map_fragment_container);
+                if (fragment != null & fragment instanceof MapFragment) {
+                    MapFragment mapFragment = (MapFragment) fragment;
+                    mapFragment.onPlaceSelected(place);
+                }
+
+            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                showErrorMessage(getString(R.string.error_request_autocomplite));
+            }
+        }
+    }
+
+    private void showErrorMessage(String errorMessage) {
+        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
+    }
+
     @Override
     public void onMapClick(LatLng latLng) {
         Intent intent = new Intent(this, ResultActivity.class);
         intent.putExtra(getString(R.string.latitude_intent_key), latLng.latitude);
         intent.putExtra(getString(R.string.longitude_intent_key), latLng.longitude);
         startActivity(intent);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        if (s.equals(getString(R.string.pref_sort_category_key))) {
-
-        }
-
-        if (s.equals(getString(R.string.pref_radius_category_key))) {
-
-        }
-
-        if (s.equals(getString(R.string.pref_date_category_key))) {
-
-        }
-
-
     }
 }

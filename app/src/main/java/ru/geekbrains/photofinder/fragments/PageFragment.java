@@ -44,7 +44,6 @@ public class PageFragment extends Fragment {
         }
     }
 
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -61,7 +60,6 @@ public class PageFragment extends Fragment {
 
         return view;
     }
-
 
     private String getPhotoUrl() {
         String tempPhotoUrl = vkApiPhoto.photo_807;

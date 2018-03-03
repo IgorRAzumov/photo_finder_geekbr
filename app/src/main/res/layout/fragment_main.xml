@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
     tools:context="ru.geekbrains.photofinder.activities.MainActivity">
 
     <Button
-        android:id="@+id/bt_login_vk"
+        android:id="@+id/bt_main_fragment_no_login_vk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/main_fragment_no_login_vk_button_text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</android.support.constraint.ConstraintLayout>
+        android:text="@string/main_fragment_no_login_vk_button_text" />
+
+    <Button
+        android:id="@+id/bt_main_fragment_login_vk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/main_fragment_login_vk_button_text" />
+</LinearLayout>

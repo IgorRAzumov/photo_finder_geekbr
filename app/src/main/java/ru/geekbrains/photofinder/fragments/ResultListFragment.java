@@ -118,6 +118,14 @@ public class ResultListFragment extends Fragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.result_list_menu, menu);
+        MenuItem action_switch_view = menu.findItem(R.id.action_change_view);
+        int viewType = photoResultAdapter.getItemViewType(getResources().getInteger(
+                R.integer.list_result_default_number_view_type_check));
+        if (viewType == PhotoResultAdapter.LINEAR_TYPE) {
+            action_switch_view.setIcon(R.drawable.ic_action_grid_view);
+        } else {
+            action_switch_view.setIcon(R.drawable.ic_action_linear_view);
+        }
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -131,9 +139,9 @@ public class ResultListFragment extends Fragment implements
                     int viewType = photoResultAdapter.getItemViewType(getResources().getInteger(
                             R.integer.list_result_default_number_view_type_check));
                     if (viewType == PhotoResultAdapter.LINEAR_TYPE) {
-                        item.setIcon(R.drawable.ic_action_switch_view_type_linear);
+                        item.setIcon(R.drawable.ic_action_grid_view);
                     } else {
-                        item.setIcon(R.drawable.ic_action_switch_view_type_grid);
+                        item.setIcon(R.drawable.ic_action_linear_view);
                     }
                 }
                 return true;
@@ -188,8 +196,13 @@ public class ResultListFragment extends Fragment implements
     }
 
     @Override
-    public void onItemRecyclerClick(View v, int position) {
+    public void onItemRecyclerClick(int position) {
         onActivityCallback.switchRecyclerToViewPager(position);
+    }
+
+    @Override
+    public void onOpenProfileButtonClickListener(int position) {
+        onActivityCallback.openProfile(position);
     }
 
     private void restoreRecyclerState() {
@@ -224,12 +237,8 @@ public class ResultListFragment extends Fragment implements
     }
 
     private void onDataChange() {
-        photoResultAdapter.notifyDataSetChanged();
         resultRecyclerView.invalidateItemDecorations();
         resultRecyclerView.invalidate();
-        if (getActivity() != null) {
-            getActivity().invalidateOptionsMenu();
-        }
     }
 
     public void onBackPressed() {
@@ -242,5 +251,7 @@ public class ResultListFragment extends Fragment implements
 
     public interface OnActivityCallback {
         void switchRecyclerToViewPager(int position);
+
+        void openProfile(int position);
     }
 }

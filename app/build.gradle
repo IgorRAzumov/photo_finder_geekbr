@@ -30,7 +30,8 @@ dependencies {
     implementation 'com.takisoft.fix:preference-v7-datetimepicker:27.0.2.0'
 
     implementation 'com.google.android.gms:play-services-maps:11.8.0'
-
+    implementation 'com.google.android.gms:play-services-places:11.8.0'
+    implementation 'com.google.android.gms:play-services-location:11.8.0'
 
     implementation 'com.pavelsikun:material-seekbar-preference:2.3.0'
 

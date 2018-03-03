@@ -22,9 +22,9 @@
             android:title="@string/pref_search_radius"
 
             app:msbp_dialogEnabled="@bool/pref_seek_bar_library_dialog_enabled"
-            app:msbp_interval="@string/pref_seek_bar_radius_interval"
-            app:msbp_maxValue="@string/pref_seek_bar_radius_max"
-            app:msbp_measurementUnit="@string/pref_seek_bar_radius_unit"
+            app:msbp_interval="@string/pref_radius_interval"
+            app:msbp_maxValue="@string/pref_radius_max"
+            app:msbp_measurementUnit="@string/pref_radius_unit"
             app:msbp_minValue="@integer/pref_radius_defaul_value" />
     </PreferenceCategory>
 

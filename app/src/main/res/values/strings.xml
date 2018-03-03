@@ -52,13 +52,13 @@
 
     <string name="pref_radius_category_title">РАДИУС ПОИСКА</string>
     <string name="pref_search_radius">Искать фотографии в радиусе:</string>
-
     <string name="pref_radius_category_key" translatable="false">radius-kategory-key</string>
     <string name="pref_radius__key" translatable="false">radius-search</string>
-    <string name="pref_seek_bar_radius_max" translatable="false">50000</string>
-    <string name="pref_seek_bar_radius_interval" translatable="false">500</string>
-    <string name="pref_seek_bar_radius_default" translatable="false">1</string>
-    <string name="pref_seek_bar_radius_unit" translatable="false">m</string>
+
+    <string name="pref_radius_max" translatable="false">50000</string>
+    <string name="pref_radius_interval" translatable="false">50</string>
+    <string name="pref_radius_default" translatable="false">500</string>
+    <string name="pref_radius_unit" translatable="false">m</string>
 
 
     <string name="pref_date_category_title">ДАТЫ ПОИСКА</string>
@@ -85,6 +85,18 @@
     <string name="vk_api_const_start_time" translatable="false">start time</string>
     <string name="vk_api_const_end_time" translatable="false">end time</string>
     <string name="vk_api_const_radius" translatable="false">radius</string>
+    <string name="error_request_autocomplite">Ошибка запроса адреса. Проверьте соедение с интернетом и повторите попытку</string>
+
+    <string name="vertical_card_upload_date_text">Дата загрузки:</string>
+    <string name="vertical_card_photo_name_default_label">Описание:</string>
+    <string name="vertical_card_photo_name_default">отсутствует</string>
+    <string name="vertical_card_button_open_profile">ОТКРЫТЬ В ВК</string>
+    <string name="vertical_card_photo_date_default">неизвестна</string>
+
+    <string name="date_format" translatable="false">dd.MM.yyyy</string>
+
+    <string name="vk_url" translatable="false">http://vk.com/id</string>
+    <string name="main_fragment_login_vk_button_text">ПРОДОЛЖИТЬ С АВТОРИЗАЦИЕЙ</string>
 
 
 </resources>

@@ -1,6 +1,7 @@
 package ru.geekbrains.photofinder.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,6 +12,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.vk.sdk.api.model.VKApiPhoto;
 import com.vk.sdk.api.model.VKPhotoArray;
 
 import java.lang.ref.WeakReference;
@@ -125,8 +127,19 @@ public class ResultActivity extends AppCompatActivity implements
 
             fragmentManager.beginTransaction()
                     .replace(R.id.fl_result_container, resultViewPagerFragment)
-                    .addToBackStack(null)
+                    //    .addToBackStack(null)
                     .commit();
+        }
+    }
+
+    @Override
+    public void openProfile(int position) {
+        VKApiPhoto vkApiPhoto = vkPhotoArray.get(position);
+        int id = Math.abs(vkApiPhoto.owner_id);
+        if (id != 0) {
+            Uri address = Uri.parse(getString(R.string.vk_url) + id);
+            Intent openProfileIntent = new Intent(Intent.ACTION_VIEW, address);
+            startActivity(openProfileIntent);
         }
     }
 

@@ -11,8 +11,9 @@ import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
 
 import ru.geekbrains.photofinder.R;
+import ru.geekbrains.photofinder.fragments.MainFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainFragment.OnActivityCallback {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,9 +21,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    //наверное, не совсем логично сделал что метод авторизации вызывается в фрагменте, а колбек от него прилетает сюда
-    //вся проблема в том, что методу loginVk() можно подать фрагмент на вход(но, фрагмент -
-    // не из support ,библиотеки) поэтому в метод подается activity, а вызывается он сам в фрагменте
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, final Intent data) {
         if (!VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
@@ -45,5 +44,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void showErrorMessage(String errorMessage) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void noLoginSelected() {
+        Intent intent = new Intent(this, MapActivity.class);
+        startActivity(intent);
     }
 }
