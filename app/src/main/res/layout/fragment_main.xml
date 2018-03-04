@@ -18,4 +18,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/main_fragment_login_vk_button_text" />
+
+    <Button
+        android:id="@+id/bt_main_fragment_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/main_fragment_refresh_button_text"
+        android:visibility="gone"/>
 </LinearLayout>

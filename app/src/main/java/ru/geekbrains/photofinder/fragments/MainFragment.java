@@ -19,6 +19,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     private Button noLoginButton;
     private Button loginButton;
+    private Button refreshButton;
+
     private OnActivityCallback onActivityCallback;
 
     public MainFragment() {
@@ -30,10 +32,21 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         noLoginButton = view.findViewById(R.id.bt_main_fragment_no_login_vk);
-        noLoginButton.setOnClickListener(this);
-
         loginButton = view.findViewById(R.id.bt_main_fragment_login_vk);
+        refreshButton = view.findViewById(R.id.bt_main_fragment_refresh);
+
+        noLoginButton.setOnClickListener(this);
         loginButton.setOnClickListener(this);
+        refreshButton.setOnClickListener(this);
+
+        if (!onActivityCallback.isOnline()) {
+            noLoginButton.setEnabled(getResources()
+                    .getBoolean(R.bool.main_fragment_no_login_button_no_network_visible));
+            loginButton.setEnabled(getResources()
+                    .getBoolean(R.bool.main_fragment_login_button_no_network));
+            refreshButton.setVisibility(View.VISIBLE);
+            onActivityCallback.showErrorMessage(getString(R.string.error_no_network));
+        }
         return view;
     }
 
@@ -50,6 +63,27 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
             }
+            case R.id.bt_main_fragment_refresh: {
+                refreshNetworkState();
+                break;
+            }
+        }
+    }
+
+    public void errorAuth() {
+
+    }
+
+    private void refreshNetworkState() {
+        if (onActivityCallback.isOnline()) {
+            noLoginButton.setEnabled(getResources().getBoolean(
+                    R.bool.main_fragment_no_login_button_on_network_visible));
+            loginButton.setEnabled(getResources().getBoolean(
+                    R.bool.main_fragment_login_button_on_network_visible));
+            refreshButton.setVisibility(View.GONE);
+
+        } else {
+            onActivityCallback.showErrorMessage(getString(R.string.error_no_network));
         }
     }
 
@@ -75,5 +109,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     public interface OnActivityCallback {
         void noLoginSelected();
 
+        boolean isOnline();
+
+        void showErrorMessage(String message);
     }
 }

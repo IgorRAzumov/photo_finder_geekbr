@@ -70,7 +70,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private void startMapFragment() {
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.fl_map_fragment_container);
-        if (mapFragment != null) {////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
     }
@@ -172,6 +172,5 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     public interface OnActivityCallback {
         void onMapClick(LatLng latLng);
-
     }
 }

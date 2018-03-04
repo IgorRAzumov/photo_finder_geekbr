@@ -73,7 +73,6 @@ public class PhotoResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-
     @Override
     public int getItemViewType(int position) {
         return viewType;

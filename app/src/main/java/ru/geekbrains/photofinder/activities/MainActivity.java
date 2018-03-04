@@ -1,6 +1,9 @@
 package ru.geekbrains.photofinder.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
@@ -15,12 +18,12 @@ import ru.geekbrains.photofinder.fragments.MainFragment;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.OnActivityCallback {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, final Intent data) {
@@ -28,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnAc
             @Override
             public void onResult(VKAccessToken res) {
                 Intent intent = new Intent(MainActivity.this, MapActivity.class);
-                String accessTokenIntentKey = getString(R.string.vk_access_token_intent_key);
+                String accessTokenIntentKey = getString(R.string.vk_access_token_key);
                 intent.putExtra(accessTokenIntentKey, res.accessToken);
                 startActivity(intent);
             }
@@ -42,7 +45,21 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnAc
         }
     }
 
-    private void showErrorMessage(String errorMessage) {
+
+    @Override
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm == null) {
+            return true;
+        }
+
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    @Override
+    public void showErrorMessage(String errorMessage) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
     }
 
