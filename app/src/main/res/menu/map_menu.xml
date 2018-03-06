@@ -2,14 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_settings"
-        android:icon="@drawable/ic_action_settings_search"
-        android:title="@string/map_activity_menu_action_change_find_settings"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/action_search_Address"
-        android:icon="@drawable/ic_action_search"
+        android:icon="@drawable/ic_action_search_address"
         android:title="blablabla"
         app:showAsAction="ifRoom" />
 </menu>
