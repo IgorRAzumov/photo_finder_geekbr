@@ -9,7 +9,7 @@
     android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
     app:cardElevation="3dp"
-    tools:cardCornerRadius="4dp">
+    tools:cardCornerRadius="2dp">
 
     <ImageView
         android:id="@+id/iv_horizontal_card_photo"

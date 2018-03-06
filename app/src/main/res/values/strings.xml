@@ -98,8 +98,9 @@
     <string name="vk_url" translatable="false">http://vk.com/id</string>
     <string name="main_fragment_login_vk_button_text">ПРОДОЛЖИТЬ С АВТОРИЗАЦИЕЙ</string>
     <string name="main_fragment_refresh_button_text">ОБНОВИТЬ</string>
-    <string name="error_no_network">Отсутствует подключение к сети. Работа приложения невозможна без подключения к интернету.</string>
+    <string name="error_no_network">Отсутствует подключение к сети. Проверьте подключение.</string>
     <string name="download_photos_more_button">ЗАГРУЗИТЬ ЕЩЕ</string>
+    <string name="ui_message_need_select_place">НЕОБХОДИМО ВЫБРАТЬ ТОЧКУ НА КАРТЕ</string>
 
 
 </resources>

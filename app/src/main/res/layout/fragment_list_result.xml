@@ -3,11 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ru.geekbrains.photofinder.fragments.ResultListFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="ru.geekbrains.photofinder.fragments.ResultListFragment"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_result_photos_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <io.saeid.fabloading.LoadingView
+        android:id="@+id/fbt_result_list_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:mfl_onclickLoading="true"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        app:mfl_duration="400"
+        android:layout_gravity="end|bottom"
+        />
 </FrameLayout>

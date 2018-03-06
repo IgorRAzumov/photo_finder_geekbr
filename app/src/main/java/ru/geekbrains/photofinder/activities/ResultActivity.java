@@ -10,7 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
+import android.widget.FrameLayout;
 
 import com.vk.sdk.api.model.VKApiPhoto;
 import com.vk.sdk.api.model.VKPhotoArray;
@@ -22,6 +22,7 @@ import ru.geekbrains.photofinder.asyncTaskLoaders.PhotoSearchVkLoader;
 import ru.geekbrains.photofinder.fragments.ProgressFragment;
 import ru.geekbrains.photofinder.fragments.ResultListFragment;
 import ru.geekbrains.photofinder.fragments.ResultViewPagerFragment;
+import ru.geekbrains.photofinder.utils.UiUtils;
 
 public class ResultActivity extends AppCompatActivity implements
         ResultListFragment.OnActivityCallback, ResultViewPagerFragment.OnActivityCallback,
@@ -29,11 +30,13 @@ public class ResultActivity extends AppCompatActivity implements
     private static final int SHOW_ERROR_MESSAGE_HANDLER_CODE = 222;
     private static final int CHANGE_FRAGMENT_MESSAGE_HANDLER_CODE = 111;
 
+    private FrameLayout rootView;
+    private ResultActivityHandler handler;
+
     private double longitude;
     private double latitude;
     private String accessToken;
     private VKPhotoArray vkPhotoArray;
-    private ResultActivityHandler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +44,7 @@ public class ResultActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_result);
 
         getDataFromIntent();
-
+        rootView = findViewById(R.id.fl_activity_result_root_view);
         handler = new ResultActivityHandler(new WeakReference<>(this));
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -63,7 +66,7 @@ public class ResultActivity extends AppCompatActivity implements
             Bundle bundle = new Bundle();
             bundle.putDouble(getString(R.string.photo_loader_bundle_key_longitude), longitude);
             bundle.putDouble(getString(R.string.photo_loader_bundle_key_latitude), latitude);
-            if(accessToken != null){
+            if (accessToken != null) {
                 bundle.putString(getString(R.string.vk_access_token_key), accessToken);
             }
             return new PhotoSearchVkLoader(this, bundle);
@@ -116,8 +119,9 @@ public class ResultActivity extends AppCompatActivity implements
 
     }
 
+
     public void showErrorMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        UiUtils.showMessage(rootView, message);
     }
 
     @Override
@@ -232,7 +236,7 @@ public class ResultActivity extends AppCompatActivity implements
                     ResultActivity resultActivity = reference.get();
                     if (resultActivity != null) {
                         resultActivity.showErrorMessage((String) msg.obj);
-                        resultActivity.onBackPressed();
+                        resultActivity.errorRequestPhotos();
                         break;
                     }
                 }
@@ -242,5 +246,15 @@ public class ResultActivity extends AppCompatActivity implements
             }
         }
 
+    }
+
+    private void errorRequestPhotos() {
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 400);
     }
 }

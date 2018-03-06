@@ -4,16 +4,17 @@ package ru.geekbrains.photofinder.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.vk.sdk.api.model.VKApiPhoto;
 
 import ru.geekbrains.photofinder.R;
 import ru.geekbrains.photofinder.utils.NetworkUtils;
+import ru.geekbrains.photofinder.utils.UiUtils;
 
 
 public class PageFragment extends Fragment {
@@ -51,7 +52,7 @@ public class PageFragment extends Fragment {
         photoImageView = view.findViewById(R.id.iv_pager_view_photo);
 
         String photoUrl = getPhotoUrl();
-        if (photoUrl != null && !photoUrl.isEmpty()) {
+        if (photoUrl != null && !TextUtils.isEmpty(photoUrl)) {
             NetworkUtils.loadImage(photoImageView, photoUrl, getContext(),
                     300, 300);
         } else {
@@ -74,6 +75,6 @@ public class PageFragment extends Fragment {
     }
 
     private void showErrorMessage(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+        UiUtils.showMessage(photoImageView, message);
     }
 }

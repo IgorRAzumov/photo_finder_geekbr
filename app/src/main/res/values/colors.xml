@@ -3,4 +3,12 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="result_list_float_bt_grid_background">#2F5DA9</color>
+    <color name="result_list_float_bt_linear_background">#C7E7FB</color>
+
+    <color name="activity_map_float_bt_grid_background">#2F5DA9</color>
+    <color name="activity_map_float_bt_linear_background">#C7E7FB</color>
+
+
 </resources>

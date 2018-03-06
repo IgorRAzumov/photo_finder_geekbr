@@ -9,10 +9,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,10 +34,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private static final int REQUEST_LOCATION_PERMISSIONS_ID = 13;
 
     private ProgressBar progressBar;
+
     private GoogleMap map;
-    private OnActivityCallback onActivityCallback;
     private Marker marker;
 
+    private OnActivityCallback onActivityCallback;
 
     public MapFragment() {
 
@@ -47,9 +50,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         progressBar = view.findViewById(R.id.pb_fragment_map_progress);
         progressBar.setVisibility(View.VISIBLE);
-
         return view;
     }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -69,10 +72,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     private void startMapFragment() {
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.fl_map_fragment_container);
+                .findFragmentById(R.id.fl_activity_map_fragment_container);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
+
+            View zoomControls = mapFragment.getView().findViewById((0x1));
+
+            if (zoomControls != null && zoomControls.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
+                RelativeLayout.LayoutParams params_zoom = (RelativeLayout.LayoutParams) zoomControls.getLayoutParams();
+
+                params_zoom.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                params_zoom.addRule(RelativeLayout.ALIGN_PARENT_START);
+
+                final int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16,
+                        getResources().getDisplayMetrics());
+                params_zoom.setMargins(margin, margin, margin, margin);
+            }
         }
+
+
     }
 
     @Override
@@ -114,11 +132,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             if (marker == null) {
                 marker = map.addMarker(new MarkerOptions()
                         .position(latLng)
-                        .alpha(0.7f));
+                        .alpha(0.3f));
             } else {
                 marker.setPosition(latLng);
             }
-
         }
     }
 

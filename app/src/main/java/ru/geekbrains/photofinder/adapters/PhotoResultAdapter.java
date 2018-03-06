@@ -20,6 +20,9 @@ import ru.geekbrains.photofinder.utils.DateTimeUtils;
 public class PhotoResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final int GRID_TYPE = 1;
     public static final int LINEAR_TYPE = 2;
+    private static final int BUTTON_TYPE = 2;
+
+
     private VKPhotoArray photosArray;
     private int viewType;
     private RecycleViewOnItemClickListener recycleViewClickListener;
@@ -167,6 +170,29 @@ public class PhotoResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     recycleViewClickListener.onOpenProfileButtonClickListener(getAdapterPosition());
                     break;
                 }
+            }
+        }
+    }
+
+    public class DownloadMoreButtonViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener {
+
+        Button downloadMoreButton;
+
+        public DownloadMoreButtonViewHolder(View itemView) {
+            super(itemView);
+            downloadMoreButton=itemView.findViewById(R.id.bt_download_more);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.bt_download_more: {
+                    recycleViewClickListener.onItemRecyclerClick(getAdapterPosition());
+                    break;
+                }
+
             }
         }
     }

@@ -3,6 +3,7 @@ package ru.geekbrains.photofinder.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,12 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         loginButton.setOnClickListener(this);
         refreshButton.setOnClickListener(this);
 
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         if (!onActivityCallback.isOnline()) {
             noLoginButton.setEnabled(getResources()
                     .getBoolean(R.bool.main_fragment_no_login_button_no_network_visible));
@@ -47,7 +54,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             refreshButton.setVisibility(View.VISIBLE);
             onActivityCallback.showErrorMessage(getString(R.string.error_no_network));
         }
-        return view;
     }
 
     @Override
