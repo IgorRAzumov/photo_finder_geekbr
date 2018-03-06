@@ -181,7 +181,7 @@ public class PhotoResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         public DownloadMoreButtonViewHolder(View itemView) {
             super(itemView);
-            downloadMoreButton=itemView.findViewById(R.id.bt_download_more);
+            downloadMoreButton = itemView.findViewById(R.id.bt_download_more);
 
         }
 

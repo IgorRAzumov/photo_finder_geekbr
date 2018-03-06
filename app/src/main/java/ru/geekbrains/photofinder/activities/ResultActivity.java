@@ -211,6 +211,16 @@ public class ResultActivity extends AppCompatActivity implements
         }
     }
 
+    private void errorRequestPhotos() {
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 400);
+    }
+
     private static class ResultActivityHandler extends Handler {
         private final WeakReference<ResultActivity> reference;
 
@@ -246,15 +256,5 @@ public class ResultActivity extends AppCompatActivity implements
             }
         }
 
-    }
-
-    private void errorRequestPhotos() {
-
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                finish();
-            }
-        }, 400);
     }
 }

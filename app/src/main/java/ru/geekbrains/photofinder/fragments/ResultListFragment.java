@@ -167,7 +167,7 @@ public class ResultListFragment extends Fragment implements
 
             @Override
             public void onAnimationEnd(int nextItemPosition) {
-            floatButton.setClickable(true);
+                floatButton.setClickable(true);
             }
         });
     }
