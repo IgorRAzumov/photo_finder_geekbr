@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <bool name="pref_date_picker_persistence">false</bool>
+    <bool name="pref_date_picker_persistence">true</bool>
 
     <bool name="pref_seek_bar_library_dialog_enabled">false</bool>
     <bool name="location_enable">true</bool>
+    <bool name="main_fragment_no_login_button_no_network_visible">false</bool>
+    <bool name="main_fragment_login_button_no_network">false</bool>
+    <bool name="main_fragment_no_login_button_on_network_visible">true</bool>
+    <bool name="main_fragment_login_button_on_network_visible">true</bool>
+    <bool name="main_fragment_refresh_button_no_network">true</bool>
 </resources>

@@ -8,7 +8,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import ru.geekbrains.photofinder.R;
 
@@ -23,8 +22,11 @@ public class DateTimeUtils {
     }
 
     public static String convertUnixDate(Context context, long date) {
-        DateFormat f = new SimpleDateFormat(context.getString(R.string.date_format), Locale.getDefault());
+     /*   DateFormat f = new SimpleDateFormat(context.getString(R.string.date_format), Locale.getDefault());
         String convertDate = f.format(date);
-        return convertDate;
+        return convertDate;*/
+
+        Date d =new  Date(date*1000L);
+        return new SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(d);
     }
 }

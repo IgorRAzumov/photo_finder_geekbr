@@ -31,21 +31,24 @@
     <PreferenceCategory
         android:key="@string/pref_date_category_key"
         android:title="@string/pref_date_category_title">
-        <com.takisoft.fix.support.v7.preference.DatePickerPreference
-            android:defaultValue="@string/pref_date_min_date_end"
+        <DatePickerPreference
             android:key="@string/pref_date_start_key"
             android:persistent="@bool/pref_date_picker_persistence"
             android:summary="@string/pref_date_select_date_start"
             android:title="@string/pref_date_start_title"
+
             app:pref_minDate="@string/pref_date_min_date"
+            app:pref_pickerDate="@string/pref_date_min_date"
             app:pref_summaryHasDate="%s" />
 
-        <com.takisoft.fix.support.v7.preference.DatePickerPreference
+        <DatePickerPreference
             android:key="@string/pref_date_end_key"
             android:persistent="@bool/pref_date_picker_persistence"
             android:summary="@string/pref_date_select_date_end"
             android:title="@string/pref_date_end_title"
+
             app:pref_minDate="@string/pref_date_min_date_end"
+            app:pref_pickerDate="@string/pref_date_min_date_end"
             app:pref_summaryHasDate="%s" />
     </PreferenceCategory>
 </PreferenceScreen>

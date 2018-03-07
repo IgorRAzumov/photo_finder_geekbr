@@ -10,7 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
+import android.widget.FrameLayout;
 
 import com.vk.sdk.api.model.VKApiPhoto;
 import com.vk.sdk.api.model.VKPhotoArray;
@@ -22,6 +22,7 @@ import ru.geekbrains.photofinder.asyncTaskLoaders.PhotoSearchVkLoader;
 import ru.geekbrains.photofinder.fragments.ProgressFragment;
 import ru.geekbrains.photofinder.fragments.ResultListFragment;
 import ru.geekbrains.photofinder.fragments.ResultViewPagerFragment;
+import ru.geekbrains.photofinder.utils.UiUtils;
 
 public class ResultActivity extends AppCompatActivity implements
         ResultListFragment.OnActivityCallback, ResultViewPagerFragment.OnActivityCallback,
@@ -29,10 +30,13 @@ public class ResultActivity extends AppCompatActivity implements
     private static final int SHOW_ERROR_MESSAGE_HANDLER_CODE = 222;
     private static final int CHANGE_FRAGMENT_MESSAGE_HANDLER_CODE = 111;
 
+    private FrameLayout rootView;
+    private ResultActivityHandler handler;
+
     private double longitude;
     private double latitude;
+    private String accessToken;
     private VKPhotoArray vkPhotoArray;
-    private ResultActivityHandler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +44,8 @@ public class ResultActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_result);
 
         getDataFromIntent();
-
+        rootView = findViewById(R.id.fl_activity_result_root_view);
         handler = new ResultActivityHandler(new WeakReference<>(this));
-
-        getSupportLoaderManager().initLoader(getResources().getInteger(
-                R.integer.photo_list_loader_id), null, this);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.fl_result_container);
@@ -54,6 +55,9 @@ public class ResultActivity extends AppCompatActivity implements
                     .add(R.id.fl_result_container, fragment)
                     .commit();
         }
+
+        getSupportLoaderManager().initLoader(getResources().getInteger(
+                R.integer.photo_list_loader_id), null, this);
     }
 
     @Override
@@ -62,6 +66,9 @@ public class ResultActivity extends AppCompatActivity implements
             Bundle bundle = new Bundle();
             bundle.putDouble(getString(R.string.photo_loader_bundle_key_longitude), longitude);
             bundle.putDouble(getString(R.string.photo_loader_bundle_key_latitude), latitude);
+            if (accessToken != null) {
+                bundle.putString(getString(R.string.vk_access_token_key), accessToken);
+            }
             return new PhotoSearchVkLoader(this, bundle);
 
         } else {
@@ -112,8 +119,9 @@ public class ResultActivity extends AppCompatActivity implements
 
     }
 
+
     public void showErrorMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        UiUtils.showMessage(rootView, message);
     }
 
     @Override
@@ -177,6 +185,7 @@ public class ResultActivity extends AppCompatActivity implements
         Intent intent = getIntent();
         longitude = intent.getDoubleExtra(getString(R.string.longitude_intent_key), 0);
         latitude = intent.getDoubleExtra(getString(R.string.latitude_intent_key), 0);
+        accessToken = intent.getStringExtra(getString(R.string.vk_access_token_key));
     }
 
     @Override
@@ -200,6 +209,16 @@ public class ResultActivity extends AppCompatActivity implements
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void errorRequestPhotos() {
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 600);
     }
 
     private static class ResultActivityHandler extends Handler {
@@ -227,7 +246,7 @@ public class ResultActivity extends AppCompatActivity implements
                     ResultActivity resultActivity = reference.get();
                     if (resultActivity != null) {
                         resultActivity.showErrorMessage((String) msg.obj);
-                        resultActivity.onBackPressed();
+                        resultActivity.errorRequestPhotos();
                         break;
                     }
                 }
