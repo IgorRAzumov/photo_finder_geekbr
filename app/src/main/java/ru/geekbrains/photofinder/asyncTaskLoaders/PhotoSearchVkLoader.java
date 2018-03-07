@@ -49,12 +49,12 @@ public class PhotoSearchVkLoader extends AsyncTaskLoader<VKPhotoArray> {
         VKResponse response;
 
         if (accessToken != null && !TextUtils.isEmpty(accessToken)) {
-            response = NetworkUtils.getPhotos(getContext(), latitude, longitude,
-                    startDate, endDate, sortBy, String.valueOf(radius), accessToken);
+            response = NetworkUtils.getPhotos(getContext(), latitude, longitude, startDate,
+                    endDate, sortBy, String.valueOf(0), String.valueOf(radius), accessToken);
 
         } else {
             response = NetworkUtils.getPhotos(getContext(), latitude, longitude,
-                    startDate, endDate, sortBy, String.valueOf(radius));
+                    startDate, endDate, sortBy, String.valueOf(0), String.valueOf(radius));
         }
 
         if (response != null) {

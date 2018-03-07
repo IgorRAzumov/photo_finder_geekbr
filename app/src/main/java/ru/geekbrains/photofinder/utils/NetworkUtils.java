@@ -17,18 +17,19 @@ import ru.geekbrains.photofinder.R;
 public class NetworkUtils {
 
     public static VKResponse getPhotos(final Context context, double latitude, double longitude,
-                                       String startTime, String endTime, String sort, String radius,
-                                       String accessToken) {
+                                       String startTime, String endTime, String sort, String offset,
+                                       String radius, String accessToken) {
         VKRequest request = getAuthPhotoRequest(context, latitude, longitude, startTime, endTime,
-                sort, radius, accessToken);
+                sort, radius, offset, accessToken);
         return executePhotoRequest(request);
     }
 
 
     public static VKResponse getPhotos(final Context context, double latitude, double longitude,
-                                       String startTime, String endTime, String sort, String radius) {
+                                       String startTime, String endTime, String sort, String offset,
+                                       String radius) {
         VKRequest request = getNoAuthPhotoRequest(context, latitude, longitude, startTime, endTime,
-                sort, radius);
+                sort, offset, radius);
         return executePhotoRequest(request);
     }
 
@@ -51,7 +52,8 @@ public class NetworkUtils {
     }
 
     private static VKRequest getNoAuthPhotoRequest(final Context context, double latitude, double longitude,
-                                                   String startTime, String endTime, String sort, String radius) {
+                                                   String startTime, String endTime, String sort, String offset,
+                                                   String radius) {
         VKRequest request = new VKRequest(context.getString(R.string.vk_photo_search_request_method_name_api),
                 VKParameters.from(
                         VKApiConst.LAT, latitude,
@@ -59,6 +61,8 @@ public class NetworkUtils {
                         context.getString(R.string.vk_api_const_start_time), startTime,
                         context.getString(R.string.vk_api_const_end_time), endTime,
                         VKApiConst.SORT, sort,
+                        VKApiConst.OFFSET, offset,
+                        VKApiConst.COUNT, context.getResources().getInteger(R.integer.vk_api_const_count),
                         context.getString(R.string.vk_api_const_radius), radius,
                         VKApiConst.VERSION, context.getString(R.string.vk_api_version)));
         request.setModelClass(VKPhotoArray.class);
@@ -66,10 +70,10 @@ public class NetworkUtils {
     }
 
     private static VKRequest getAuthPhotoRequest(final Context context, double latitude, double longitude,
-                                                 String startTime, String endTime, String sort, String radius,
-                                                 String accessToken) {
+                                                 String startTime, String endTime, String sort, String offset,
+                                                 String radius, String accessToken) {
         VKRequest request = getNoAuthPhotoRequest(context, latitude, longitude, startTime,
-                endTime, sort, radius);
+                endTime, sort, offset, radius);
         request.addExtraParameter(VKApiConst.ACCESS_TOKEN, accessToken);
         return request;
     }

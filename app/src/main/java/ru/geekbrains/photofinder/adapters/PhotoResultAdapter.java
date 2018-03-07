@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ import com.vk.sdk.api.model.VKPhotoArray;
 
 import ru.geekbrains.photofinder.R;
 import ru.geekbrains.photofinder.utils.DateTimeUtils;
+import ru.geekbrains.photofinder.utils.NetworkUtils;
 
 
 public class PhotoResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -89,23 +91,15 @@ public class PhotoResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private void bindImageView(ImageView imageView, String url, Context context) {//, int targetWidth, int targetHeight) {
         switch (viewType) {
             case GRID_TYPE: {
-                loadImage(imageView, url, context, 100, 120);
+                NetworkUtils.loadImage(imageView, url, context, 100, 120);
                 break;
             }
             default: {
-                loadImage(imageView, url, context, 260, 260);
+                NetworkUtils.loadImage(imageView, url, context, 260, 260);
             }
         }
     }
 
-    private void loadImage(ImageView imageView, String url, Context context, int targetWidth,
-                           int targetHeight) {
-        Picasso
-                .with(context)
-                .load(url)
-                // .resize(targetWidth, targetHeight)
-                .into(imageView);
-    }
 
     public void setData(VKPhotoArray data) {
         photosArray = data;
@@ -147,13 +141,13 @@ public class PhotoResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             implements View.OnClickListener {
         ImageView photoImageView;
         TextView uploadDateTextView;
-        Button openProfileButton;
+        ImageButton openProfileButton;
 
         public PhotoCardVerticalViewHolder(View itemView) {
             super(itemView);
             photoImageView = itemView.findViewById(R.id.iv_vertical_card_photo);
             uploadDateTextView = itemView.findViewById(R.id.tv_vertical_card_upload_date);
-            openProfileButton = itemView.findViewById(R.id.bt_vertical_photo_open_profile);
+            openProfileButton = itemView.findViewById(R.id.imbt_vertical_photo_open_profile);
 
             openProfileButton.setOnClickListener(this);
             itemView.setOnClickListener(this);
@@ -166,7 +160,7 @@ public class PhotoResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     recycleViewClickListener.onItemRecyclerClick(getAdapterPosition());
                     break;
                 }
-                case R.id.bt_vertical_photo_open_profile: {
+                case R.id.imbt_vertical_photo_open_profile: {
                     recycleViewClickListener.onOpenProfileButtonClickListener(getAdapterPosition());
                     break;
                 }

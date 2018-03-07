@@ -193,6 +193,6 @@ public class MapActivity extends AppCompatActivity implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        System.out.println(s);
+
     }
 }

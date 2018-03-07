@@ -218,7 +218,7 @@ public class ResultActivity extends AppCompatActivity implements
             public void run() {
                 finish();
             }
-        }, 400);
+        }, 600);
     }
 
     private static class ResultActivityHandler extends Handler {

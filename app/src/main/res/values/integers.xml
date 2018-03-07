@@ -16,4 +16,5 @@
 
 
     <integer name="millisecond_in_second">1000</integer>
+    <integer name="vk_api_const_count">100</integer>
 </resources>
