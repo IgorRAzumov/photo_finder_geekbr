@@ -1,20 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout
         android:id="@+id/fl_activity_map_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
-    <io.saeid.fabloading.LoadingView
-        android:id="@+id/fbt_map_fragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/map_activity_float_button_margin"
-        app:mfl_duration="200"
-        app:mfl_onclickLoading="true" />
 </FrameLayout>
