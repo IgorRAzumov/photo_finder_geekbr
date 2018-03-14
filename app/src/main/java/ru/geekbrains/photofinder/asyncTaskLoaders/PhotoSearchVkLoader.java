@@ -5,23 +5,30 @@ import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 import android.text.TextUtils;
 
+import com.vk.sdk.api.VKApiConst;
 import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.model.VKPhotoArray;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import ru.geekbrains.photofinder.R;
+import ru.geekbrains.photofinder.data.PhotosResponse;
 import ru.geekbrains.photofinder.utils.DateTimeUtils;
 import ru.geekbrains.photofinder.utils.NetworkUtils;
 import ru.geekbrains.photofinder.utils.PrefUtils;
 
-public class PhotoSearchVkLoader extends AsyncTaskLoader<VKPhotoArray> {
-    private VKPhotoArray vkPhotoArray = null;
-    private String accessToken;
-    private double longitude;
+public class PhotoSearchVkLoader extends AsyncTaskLoader<PhotosResponse> {
+    private PhotosResponse mapResponse;
+
     private double latitude;
-    private int radius;
+    private double longitude;
     private String startDate;
     private String endDate;
     private String sortBy;
+    private int offset;
+    private int radius;
+    private String accessToken;
 
 
     public PhotoSearchVkLoader(Context context, Bundle bundle) {
@@ -37,42 +44,54 @@ public class PhotoSearchVkLoader extends AsyncTaskLoader<VKPhotoArray> {
             return;
         }
 
-        if (vkPhotoArray != null) {
-            deliverResult(vkPhotoArray);
+        if (mapResponse != null) {
+            deliverResult(mapResponse);
         } else {
             forceLoad();
         }
     }
 
     @Override
-    public VKPhotoArray loadInBackground() {
+    public PhotosResponse loadInBackground() {
         VKResponse response;
 
         if (accessToken != null && !TextUtils.isEmpty(accessToken)) {
             response = NetworkUtils.getPhotos(getContext(), latitude, longitude, startDate,
-                    endDate, sortBy, String.valueOf(0), String.valueOf(radius), accessToken);
+                    endDate, sortBy, String.valueOf(offset), String.valueOf(radius), accessToken);
 
         } else {
             response = NetworkUtils.getPhotos(getContext(), latitude, longitude,
-                    startDate, endDate, sortBy, String.valueOf(0), String.valueOf(radius));
+                    startDate, endDate, sortBy, String.valueOf(offset), String.valueOf(radius));
         }
 
         if (response != null) {
-            vkPhotoArray = (VKPhotoArray) response.parsedModel;
+            try {
+                return mapResponseToPhotosResponse(response);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
-        return vkPhotoArray;
+        return null;
+    }
+
+    private PhotosResponse mapResponseToPhotosResponse(VKResponse response) throws JSONException {
+        JSONObject responseJSONObject = response.json.getJSONObject("response");
+        int count = responseJSONObject.getInt(VKApiConst.COUNT);
+        return new PhotosResponse(count, (VKPhotoArray) response.parsedModel);
     }
 
     @Override
-    public void deliverResult(VKPhotoArray data) {
-        vkPhotoArray = data;
+    public void deliverResult(PhotosResponse data) {
+        mapResponse = data;
         super.deliverResult(data);
     }
 
     private void getData(Bundle bundle, Context context) {
         longitude = bundle.getDouble(context.getString(R.string.photo_loader_bundle_key_longitude));
         latitude = bundle.getDouble(context.getString(R.string.photo_loader_bundle_key_latitude));
-        accessToken = bundle.getString(context.getString(R.string.vk_access_token_key),
+        offset = bundle.getInt(getContext().getString(R.string.photo_loader_bundle_key_offset),
+                getContext().getResources().getInteger(R.integer.vk_request_offset_default_value));
+        accessToken = bundle.getString(context.getString(R.string.vk_access_token_bundle_key),
                 "");
 
         sortBy = PrefUtils.getSearchSortForPreference(context);
@@ -83,14 +102,13 @@ public class PhotoSearchVkLoader extends AsyncTaskLoader<VKPhotoArray> {
             startDate = DateTimeUtils.convertPrefDataToUnix(context, startDate);
 
             endDate = PrefUtils.getSearchEndForPreference(context);
-            endDate = DateTimeUtils.convertPrefDataToUnix(context, endDate);
 
-            /*if (endDateForPref == null || TextUtils.isEmpty(endDateForPref)) {
+            if (endDate == null || TextUtils.isEmpty(endDate)) {
                 endDate = String.valueOf(System.currentTimeMillis() / getContext().getResources()
                         .getInteger(R.integer.millisecond_in_second));
             } else {
-                endDate = DateTimeUtils.convertPrefDataToUnix(context, endDateForPref);
-            }*/
+                endDate = DateTimeUtils.convertPrefDataToUnix(context, endDate);
+            }
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -103,6 +121,5 @@ public class PhotoSearchVkLoader extends AsyncTaskLoader<VKPhotoArray> {
                         .getInteger(R.integer.millisecond_in_second));
             }
         }
-
     }
 }

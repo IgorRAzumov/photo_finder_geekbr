@@ -19,6 +19,8 @@ import com.vk.sdk.api.model.VKPhotoArray;
 import io.saeid.fabloading.LoadingView;
 import ru.geekbrains.photofinder.R;
 import ru.geekbrains.photofinder.adapters.PhotoResultAdapter;
+import ru.geekbrains.photofinder.data.PhotosResponse;
+import ru.geekbrains.photofinder.utils.PhotosResultScrollListener;
 import ru.geekbrains.photofinder.utils.PrefUtils;
 
 
@@ -33,20 +35,20 @@ public class ResultListFragment extends Fragment implements
     private GridLayoutManager gridLayoutManager;
     private LoadingView floatButton;
 
+
     public ResultListFragment() {
     }
 
-    public static ResultListFragment newInstance(String vkPhotoArrayBundleKey,
-                                                 VKPhotoArray vkPhotoArray) {
+    public static ResultListFragment newInstance(String vkPhotoArrayBundleKey, VKPhotoArray vkPhotoArray) {
         ResultListFragment resultListFragment = new ResultListFragment();
         Bundle arguments = new Bundle();
         arguments.putParcelable(vkPhotoArrayBundleKey, vkPhotoArray);
+
         resultListFragment.setArguments(arguments);
         return resultListFragment;
     }
 
-    public static ResultListFragment newInstance(String vkPhotoArrayBundleKey,
-                                                 VKPhotoArray vkPhotoArray,
+    public static ResultListFragment newInstance(String vkPhotoArrayBundleKey, VKPhotoArray vkPhotoArray,
                                                  String photoPositionBundleKey, int position) {
         ResultListFragment resultListFragment = new ResultListFragment();
         Bundle arguments = new Bundle();
@@ -65,7 +67,6 @@ public class ResultListFragment extends Fragment implements
         if (bundle != null) {
             VKPhotoArray vkPhotoArray = bundle.getParcelable(
                     getString(R.string.vk_photo_array_bundle_key));
-
             lastSavedPosition = bundle.getInt(getString(R.string.vk_photo_array_position_bundle_key),
                     getResources().getInteger(R.integer.list_result_no_save_instance_position));
 
@@ -94,22 +95,39 @@ public class ResultListFragment extends Fragment implements
                 .getInteger(R.integer.span_count_grid_result_portr));
         linearLayoutManager = new LinearLayoutManager(getContext());
 
-        int viewType = PrefUtils.getViewTypeForPreference(getActivity());//PhotoResultAdapter.LINEAR_TYPE;
+        int viewType = PrefUtils.getViewTypeFromPreference(getActivity());
         initFloatButton(viewType);
         initRecyclerView(viewType);
         checkSavedPosition(savedInstanceState);
-
         return view;
     }
 
     private void initRecyclerView(int viewType) {
-        photoResultAdapter.setViewType(viewType);
+        photoResultAdapter.setItemViewType(viewType);
         if (viewType == PhotoResultAdapter.LINEAR_TYPE) {
             resultRecyclerView.setLayoutManager(linearLayoutManager);
         } else {
             resultRecyclerView.setLayoutManager(gridLayoutManager);
         }
         resultRecyclerView.setAdapter(photoResultAdapter);
+
+        resultRecyclerView.addOnScrollListener(new PhotosResultScrollListener(linearLayoutManager, gridLayoutManager) {
+            @Override
+            protected void loadMoreData() {
+                onActivityCallback.loadMoreData();
+                photoResultAdapter.setItemViewType(PhotoResultAdapter.PROGRESS_TYPE);
+            }
+
+            @Override
+            public boolean isDataEnd() {
+                return onActivityCallback.isDataEnd();
+            }
+
+            @Override
+            public boolean isLoading() {
+                return onActivityCallback.isLoading();
+            }
+        });
     }
 
     private void checkSavedPosition(Bundle savedInstanceState) {
@@ -118,10 +136,9 @@ public class ResultListFragment extends Fragment implements
             lastSavedPosition = savedInstanceState.getInt(
                     getString(R.string.list_result_position_save_key), noSavePosition
             );
-        }
-
-        if (lastSavedPosition > noSavePosition) {
-            restoreRecyclerState();
+            if (lastSavedPosition > noSavePosition) {
+                restoreRecyclerState();
+            }
         }
     }
 
@@ -217,7 +234,7 @@ public class ResultListFragment extends Fragment implements
 
     @Override
     public void onItemRecyclerClick(int position) {
-        onActivityCallback.switchRecyclerToViewPager(position);
+        onActivityCallback.switchResultRecyclerToViewPager(position);
     }
 
     @Override
@@ -228,13 +245,18 @@ public class ResultListFragment extends Fragment implements
     private void restoreRecyclerState() {
         switch (photoResultAdapter.getItemViewType(getResources()
                 .getInteger(R.integer.list_result_default_number_view_type_check))) {
+            case PhotoResultAdapter.PROGRESS_TYPE: {
+                break;
+            }
             case PhotoResultAdapter.GRID_TYPE: {
                 gridLayoutManager.scrollToPosition(lastSavedPosition);
                 break;
             }
             default: {
                 linearLayoutManager.scrollToPosition(lastSavedPosition);
+                break;
             }
+
         }
     }
 
@@ -245,35 +267,46 @@ public class ResultListFragment extends Fragment implements
         if (!isGrid) {
             fistVisiblePosition = linearLayoutManager.findFirstVisibleItemPosition();
             resultRecyclerView.setLayoutManager(gridLayoutManager);
-            photoResultAdapter.setViewType(PhotoResultAdapter.GRID_TYPE);
+            photoResultAdapter.setItemViewType(PhotoResultAdapter.GRID_TYPE);
             gridLayoutManager.scrollToPosition(fistVisiblePosition);
         } else {
             fistVisiblePosition = gridLayoutManager.findFirstVisibleItemPosition();
             resultRecyclerView.setLayoutManager(linearLayoutManager);
-            photoResultAdapter.setViewType(PhotoResultAdapter.LINEAR_TYPE);
+            photoResultAdapter.setItemViewType(PhotoResultAdapter.LINEAR_TYPE);
             linearLayoutManager.scrollToPosition(fistVisiblePosition);
         }
-        onDataChange();
-    }
 
-    private void onDataChange() {
         resultRecyclerView.invalidateItemDecorations();
-        resultRecyclerView.invalidate();
     }
 
     public void onBackPressed() {
         floatButton.startAnimation();
         switchRecyclerViewLayoutManager();
-
     }
 
     public boolean isNeedBackPressed() {
         return resultRecyclerView.getLayoutManager() != gridLayoutManager;
     }
 
+    public void addMoreData(PhotosResponse data) {
+        photoResultAdapter.setItemViewType(photoResultAdapter.getPenultimateViewType());
+        photoResultAdapter.removeLoadingFooter();
+        photoResultAdapter.addAll(data.getVkPhotoArray());
+
+        if (!onActivityCallback.isDataEnd()) {
+            photoResultAdapter.addLoadingFooter();
+        }
+    }
+
     public interface OnActivityCallback {
-        void switchRecyclerToViewPager(int position);
+        void switchResultRecyclerToViewPager(int position);
 
         void openProfile(int position);
+
+        void loadMoreData();
+
+        boolean isDataEnd();
+
+        boolean isLoading();
     }
 }

@@ -17,7 +17,7 @@
         android:key="@string/pref_radius_category_key"
         android:title="@string/pref_radius_category_title">
         <com.pavelsikun.seekbarpreference.SeekBarPreferenceCompat
-            android:defaultValue="@integer/pref_radius_defaul_value"
+            android:defaultValue="@integer/pref_radius_default_value"
             android:key="@string/pref_radius__key"
             android:title="@string/pref_search_radius"
 
@@ -25,7 +25,7 @@
             app:msbp_interval="@string/pref_radius_interval"
             app:msbp_maxValue="@string/pref_radius_max"
             app:msbp_measurementUnit="@string/pref_radius_unit"
-            app:msbp_minValue="@integer/pref_radius_defaul_value" />
+            app:msbp_minValue="@integer/pref_radius_default_value" />
     </PreferenceCategory>
 
     <PreferenceCategory

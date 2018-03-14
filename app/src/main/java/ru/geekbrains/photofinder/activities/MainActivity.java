@@ -34,14 +34,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnAc
             @Override
             public void onResult(VKAccessToken res) {
                 Intent intent = new Intent(MainActivity.this, MapActivity.class);
-                String accessTokenIntentKey = getString(R.string.vk_access_token_key);
+                String accessTokenIntentKey = getString(R.string.vk_access_token_bundle_key);
                 intent.putExtra(accessTokenIntentKey, res.accessToken);
                 startActivity(intent);
             }
 
             @Override
             public void onError(VKError error) {
-                showErrorMessage(getString(R.string.authorization_error));
+                UiUtils.showMessage(rootView, getString(R.string.authorization_error));
             }
         })) {
             super.onActivityResult(requestCode, resultCode, data);
@@ -51,21 +51,16 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnAc
 
     @Override
     public boolean isOnline() {
-        ConnectivityManager cm =
+        ConnectivityManager connectivityManager =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm == null) {
-            return true;
+        if (connectivityManager != null) {
+            NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
+            return netInfo != null && netInfo.isConnectedOrConnecting();
+
         }
-
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
+        return false;
     }
 
-    @Override
-    public void showErrorMessage(String errorMessage) {
-
-        UiUtils.showMessage(rootView, errorMessage);
-    }
 
     @Override
     public void noLoginSelected() {

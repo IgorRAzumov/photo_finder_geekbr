@@ -26,7 +26,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import io.saeid.fabloading.LoadingView;
 import ru.geekbrains.photofinder.R;
+import ru.geekbrains.photofinder.utils.UiUtils;
 
 
 public class MapFragment extends Fragment implements OnMapReadyCallback,
@@ -34,10 +36,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private static final int REQUEST_LOCATION_PERMISSIONS_ID = 13;
 
     private ProgressBar progressBar;
+    private LoadingView floatButton;
 
     private GoogleMap map;
     private Marker marker;
 
+    private boolean isPlaceSelected;
+    private LatLng savedMarkerPosition;
     private OnActivityCallback onActivityCallback;
 
     public MapFragment() {
@@ -49,10 +54,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         progressBar = view.findViewById(R.id.pb_fragment_map_progress);
+        floatButton = view.findViewById(R.id.fbt_map_fragment);
         progressBar.setVisibility(View.VISIBLE);
+
+        checkSavedSelectedPosition(savedInstanceState);
         return view;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        if (marker != null) {
+            outState.putParcelable(getString(R.string.lat_lang_bundle_key), marker.getPosition());
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    private void checkSavedSelectedPosition(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            savedMarkerPosition = savedInstanceState
+                    .getParcelable(getString(R.string.lat_lang_bundle_key));
+        }
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -70,6 +92,52 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
+    private void initFloatButton() {
+        boolean isLollipop = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+        int selectPlace = isLollipop
+                ? R.drawable.select_place_map_floating_bt_lollipop
+                : R.drawable.select_place_map_floating_bt;
+        int selectOptions = isLollipop
+                ? R.drawable.search_settings_floating_bt_lollipop
+                : R.drawable.search_settings_floating_bt;
+
+        int selectPlaceBackground = getResources().getColor(R.color.activity_map_float_bt_linear_background);
+        int selectSettingsBackground = getResources().getColor(R.color.activity_map_float_bt_grid_background);
+
+        floatButton.addAnimation(selectPlaceBackground, selectPlace, LoadingView.FROM_TOP);
+        floatButton.addAnimation(selectSettingsBackground, selectOptions, LoadingView.FROM_BOTTOM);
+        /*floatButton.addAnimation(selectSettingsBackground, selectOptions, LoadingView.FROM_BOTTOM);
+        floatButton.addAnimation(selectPlaceBackground, selectPlace, LoadingView.FROM_TOP);*/
+
+        floatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isPlaceSelected) {
+                    buttonSettingsClick();
+                } else {
+                    UiUtils.showMessage(floatButton,
+                            getString(R.string.ui_message_need_select_place));
+                }
+            }
+        });
+
+        floatButton.addListener(new LoadingView.LoadingListener() {
+            @Override
+            public void onAnimationStart(int currentItemPosition) {
+                floatButton.setClickable(false);
+            }
+
+            @Override
+            public void onAnimationRepeat(int nextItemPosition) {
+            }
+
+            @Override
+            public void onAnimationEnd(int nextItemPosition) {
+                floatButton.setClickable(true);
+            }
+        });
+    }
+
     private void startMapFragment() {
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.fl_activity_map_fragment_container);
@@ -81,13 +149,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             if (zoomControls != null && zoomControls.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
                 RelativeLayout.LayoutParams params_zoom = (RelativeLayout.LayoutParams) zoomControls.getLayoutParams();
 
-                params_zoom.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                params_zoom.addRule(RelativeLayout.CENTER_HORIZONTAL);
                 params_zoom.addRule(RelativeLayout.ALIGN_PARENT_START);
 
-                final int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16,
+                final int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 35,
                         getResources().getDisplayMetrics());
                 params_zoom.setMargins(margin, margin, margin, margin);
             }
+
+            initFloatButton();
         }
 
 
@@ -127,15 +197,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onMapClick(LatLng latLng) {
-        if (onActivityCallback != null) {
-            onActivityCallback.onMapClick(latLng);
-            if (marker == null) {
-                marker = map.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .alpha(0.3f));
-            } else {
-                marker.setPosition(latLng);
-            }
+        if (!isPlaceSelected) {
+            isPlaceSelected = true;
+        }
+
+        floatButton.startAnimation();
+        onActivityCallback.onMapClick(latLng);
+        if (marker == null) {
+            marker = map.addMarker(new MarkerOptions()
+                    .position(latLng)
+                    .alpha(Float.parseFloat(getString(R.string.map_fragment_map_marker_alpha))));
+        } else {
+            marker.setPosition(latLng);
         }
     }
 
@@ -162,13 +235,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         } else {
             map.setMyLocationEnabled(true);
         }
+
+        if (savedMarkerPosition != null) {
+            isPlaceSelected = true;
+            floatButton.startAnimation();
+            marker = map.addMarker(new MarkerOptions()
+                    .position(savedMarkerPosition)
+                    .alpha(Float.parseFloat(getString(R.string.map_fragment_map_marker_alpha))));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(savedMarkerPosition,
+                    Float.parseFloat(getString(R.string.map_fragment_map_default_zoom))));
+        }
+    }
+
+    private void buttonSettingsClick() {
+        onActivityCallback.buttonSettingsClick();
     }
 
     private void setDefaultMapSettings() {
         LatLng defaultLatLng = new LatLng(Double.parseDouble(getString(R.string.default_latitude)),
                 Double.parseDouble(getString(R.string.default_longitude)));
-        float zoom = Float.parseFloat(getString(R.string.default_zoom));
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLatLng, zoom));
+
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLatLng,
+                Float.parseFloat(getString(R.string.map_fragment_map_default_zoom))));
 
     }
 
@@ -189,5 +277,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     public interface OnActivityCallback {
         void onMapClick(LatLng latLng);
+
+        void buttonSettingsClick();
     }
 }

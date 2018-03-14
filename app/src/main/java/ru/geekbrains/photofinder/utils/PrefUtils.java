@@ -18,7 +18,7 @@ public class PrefUtils {
     }
 
 
-    public static int getViewTypeForPreference(Context context) {
+    public static int getViewTypeFromPreference(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(
                 context.getString(R.string.app_pref), Context.MODE_PRIVATE);
 
@@ -38,7 +38,7 @@ public class PrefUtils {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         return sharedPreferences.getInt(context.getString(R.string.pref_radius__key),
-                context.getResources().getInteger(R.integer.pref_radius_defaul_value));
+                context.getResources().getInteger(R.integer.pref_radius_default_value));
     }
 
     public static String getSearchStartForPreference(Context context) {

@@ -5,12 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.vk.sdk.api.model.VKApiPhoto;
 import com.vk.sdk.api.model.VKPhotoArray;
 
@@ -22,28 +20,37 @@ import ru.geekbrains.photofinder.utils.NetworkUtils;
 public class PhotoResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final int GRID_TYPE = 1;
     public static final int LINEAR_TYPE = 2;
-    private static final int BUTTON_TYPE = 2;
+    public static final int PROGRESS_TYPE = 3;
 
-
-    private VKPhotoArray photosArray;
-    private int viewType;
     private RecycleViewOnItemClickListener recycleViewClickListener;
+    private VKPhotoArray photosList;
+    private int viewType;
+    private boolean isLoadingAdded;
+
+    private int penultimateViewType;
+
 
     public PhotoResultAdapter(RecycleViewOnItemClickListener
                                       recycleViewClickListener, VKPhotoArray vkPhotoArray) {
         this.recycleViewClickListener = recycleViewClickListener;
-        photosArray = vkPhotoArray;
+        photosList = vkPhotoArray;
     }
+
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         switch (viewType) {
-            case GRID_TYPE:
+            case PROGRESS_TYPE: {
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.load_photos_more_progress,
+                        parent, false);
+                return new LoadMoreButtonViewHolder(view);
+            }
+            case GRID_TYPE: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.horizontal_photo_card,
                         parent, false);
                 return new PhotoCardGridViewHolder(view);
-
+            }
             default: {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.vertical_photo_card,
                         parent, false);
@@ -55,19 +62,24 @@ public class PhotoResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        VKApiPhoto photo = photosArray.get(position);
+        VKApiPhoto photo = photosList.get(position);
         String photoUrl;
 
         switch (viewType) {
+            case PROGRESS_TYPE: {
+                break;
+            }
             case GRID_TYPE: {
-                photoUrl = photo.photo_130;
+                photoUrl = photo.photo_604;
                 PhotoCardGridViewHolder gridHolder = (PhotoCardGridViewHolder) holder;
                 bindImageView(gridHolder.photoImageView, photoUrl, holder.itemView.getContext());
                 break;
             }
             default: {
                 photoUrl = photo.photo_604;
+                System.out.println(holder.getClass());
                 PhotoCardVerticalViewHolder verticalHolder = (PhotoCardVerticalViewHolder) holder;
+
                 bindImageView(verticalHolder.photoImageView, photoUrl, holder.itemView.getContext());
                 long date = photo.date;
                 if (date != 0) {
@@ -85,7 +97,17 @@ public class PhotoResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return photosArray.size();
+        return photosList == null ? 0 : photosList.size();
+    }
+
+    public VKApiPhoto getItem(int position) {
+        VKApiPhoto vkApiPhoto;
+        if (position < photosList.size()) {
+            vkApiPhoto = photosList.get(position);
+        } else {
+            vkApiPhoto = null;
+        }
+        return vkApiPhoto;
     }
 
     private void bindImageView(ImageView imageView, String url, Context context) {//, int targetWidth, int targetHeight) {
@@ -102,17 +124,60 @@ public class PhotoResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
     public void setData(VKPhotoArray data) {
-        photosArray = data;
+        photosList = data;
     }
 
-    public void setViewType(int type) {
-        this.viewType = type;
+    public void setItemViewType(int type) {
+        penultimateViewType = viewType;
+        viewType = type;
     }
+
+
+    public void add(VKApiPhoto photo) {
+        photosList.add(photo);
+        notifyItemInserted(photosList.size() - 1);
+    }
+
+    public void addAll(VKPhotoArray vkPhotoArray) {
+        for (VKApiPhoto photo : vkPhotoArray) {
+            add(photo);
+        }
+    }
+
+    public void remove(VKApiPhoto photo) {
+        int position = photosList.indexOf(photo);
+        if (position > -1) {
+            photosList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+    public void addLoadingFooter() {
+        isLoadingAdded = true;
+        add(new VKApiPhoto());
+    }
+
+    public void removeLoadingFooter() {
+        isLoadingAdded = false;
+        int position = photosList.size() - 1;
+        VKApiPhoto photo = getItem(position);
+
+        if (photo != null) {
+            photosList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+    public int getPenultimateViewType() {
+        return penultimateViewType;
+    }
+
 
     public interface RecycleViewOnItemClickListener {
         void onItemRecyclerClick(int position);
 
         void onOpenProfileButtonClickListener(int adapterPosition);
+
     }
 
     class PhotoCardGridViewHolder extends RecyclerView.ViewHolder
@@ -168,26 +233,9 @@ public class PhotoResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    public class DownloadMoreButtonViewHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener {
-
-        Button downloadMoreButton;
-
-        public DownloadMoreButtonViewHolder(View itemView) {
+    public class LoadMoreButtonViewHolder extends RecyclerView.ViewHolder {
+        public LoadMoreButtonViewHolder(View itemView) {
             super(itemView);
-            downloadMoreButton = itemView.findViewById(R.id.bt_download_more);
-
-        }
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.bt_download_more: {
-                    recycleViewClickListener.onItemRecyclerClick(getAdapterPosition());
-                    break;
-                }
-
-            }
         }
     }
 }

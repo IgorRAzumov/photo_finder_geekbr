@@ -101,11 +101,11 @@ public class ResultViewPagerFragment extends Fragment {
     }
 
     public void onBackPressed() {
-        onActivityCallback.switchViewPagerToRecycler(resultViewPager.getCurrentItem());
+        onActivityCallback.switchViewPagerToResultRecycler(resultViewPager.getCurrentItem());
     }
 
     public interface OnActivityCallback {
-        void switchViewPagerToRecycler(int position);
+        void switchViewPagerToResultRecycler(int position);
     }
 
 

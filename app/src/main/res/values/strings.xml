@@ -8,11 +8,11 @@
 
     <string name="default_longitude" translatable="false">-43.1729427749</string>
     <string name="default_latitude" translatable="false">-22.9032315871</string>
-    <string name="default_zoom" translatable="false">8</string>
+    <string name="map_fragment_map_default_zoom" translatable="false">8</string>
 
     <string name="main_fragment_no_login_vk_button_text">ПРОДОЛЖИТЬ БЕЗ АВТОРИЗАЦИИ</string>
 
-    <string name="vk_access_token_key" translatable="false">access-code-key-intent</string>
+    <string name="vk_access_token_bundle_key" translatable="false">access-code-key-intent</string>
     <string name="latitude_intent_key" translatable="false">latitude-intent-key</string>
     <string name="longitude_intent_key" translatable="false">longitude</string>
 
@@ -85,7 +85,8 @@
     <string name="vk_api_const_start_time" translatable="false">start_time</string>
     <string name="vk_api_const_end_time" translatable="false">end_time</string>
     <string name="vk_api_const_radius" translatable="false">radius</string>
-    <string name="error_request_autocomplite">Ошибка запроса адреса. Проверьте соедение с интернетом и повторите попытку</string>
+
+    <string name="error_request_autocomplete">Ошибка запроса адреса. Проверьте соедение с интернетом и повторите попытку</string>
 
     <string name="vertical_card_upload_date_text">Дата загрузки:</string>
     <string name="vertical_card_photo_name_default_label">Описание:</string>
@@ -96,11 +97,18 @@
     <string name="date_format" translatable="false">dd.MM.yyyy</string>
 
     <string name="vk_url" translatable="false">http://vk.com/id</string>
+
     <string name="main_fragment_login_vk_button_text">ПРОДОЛЖИТЬ С АВТОРИЗАЦИЕЙ</string>
     <string name="main_fragment_refresh_button_text">ОБНОВИТЬ</string>
     <string name="error_no_network">Отсутствует подключение к сети. Проверьте подключение.</string>
     <string name="download_photos_more_button">ЗАГРУЗИТЬ ЕЩЕ</string>
     <string name="ui_message_need_select_place">НЕОБХОДИМО ВЫБРАТЬ ТОЧКУ НА КАРТЕ</string>
+
+    <string name="vk_total_found_photo_bundle_key" translatable="false">vk-total-found-photo-byndle-key</string>
+    <string name="photo_loader_bundle_key_offset" translatable="false">photo-loader-bundle-key-offset</string>
+    <string name="lat_lang_bundle_key">lat-lang-bundle-key</string>
+    <string name="map_fragment_map_marker_alpha">0.5</string>
+    <string name="vk_access_token_empty_value">sd</string>
 
 
 </resources>

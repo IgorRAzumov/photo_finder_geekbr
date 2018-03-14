@@ -10,11 +10,18 @@
 
     <integer name="photo_list_loader_id">11</integer>
 
-    <integer name="pref_radius_defaul_value">50</integer>
+    <integer name="pref_radius_default_value">50</integer>
 
     <integer name="request_location_permission_id">13</integer>
 
 
     <integer name="millisecond_in_second">1000</integer>
     <integer name="vk_api_const_count">100</integer>
+    <integer name="vk_request_offset_default_value">0</integer>
+
+    <integer name="vk_api_paream_count_default_value">100</integer>
+
+    <integer name="result_activity_finish_delay">700</integer>
+
+    <integer name="map_fragment_fab_duration">200</integer>
 </resources>
