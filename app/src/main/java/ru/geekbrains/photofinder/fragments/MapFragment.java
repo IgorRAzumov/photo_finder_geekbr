@@ -169,6 +169,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         switch (requestCode) {
             case REQUEST_LOCATION_PERMISSIONS_ID: {
                 startMapFragment();
+                break;
             }
             default: {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);

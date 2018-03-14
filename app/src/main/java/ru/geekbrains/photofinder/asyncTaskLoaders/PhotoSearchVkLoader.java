@@ -57,11 +57,15 @@ public class PhotoSearchVkLoader extends AsyncTaskLoader<PhotosResponse> {
 
         if (accessToken != null && !TextUtils.isEmpty(accessToken)) {
             response = NetworkUtils.getPhotos(getContext(), latitude, longitude, startDate,
-                    endDate, sortBy, String.valueOf(offset), String.valueOf(radius), accessToken);
+                    endDate, sortBy, String.valueOf(offset),
+                    String.valueOf(getContext().getResources().getInteger(R.integer.vk_api_const_count)),
+                    String.valueOf(radius), accessToken);
 
         } else {
             response = NetworkUtils.getPhotos(getContext(), latitude, longitude,
-                    startDate, endDate, sortBy, String.valueOf(offset), String.valueOf(radius));
+                    startDate, endDate, sortBy, String.valueOf(offset),
+                    String.valueOf(getContext().getResources().getInteger(R.integer.vk_api_const_count)),
+                    String.valueOf(radius));
         }
 
         if (response != null) {

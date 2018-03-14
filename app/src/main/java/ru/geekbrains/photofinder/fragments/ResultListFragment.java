@@ -69,7 +69,6 @@ public class ResultListFragment extends Fragment implements
                     getString(R.string.vk_photo_array_bundle_key));
             lastSavedPosition = bundle.getInt(getString(R.string.vk_photo_array_position_bundle_key),
                     getResources().getInteger(R.integer.list_result_no_save_instance_position));
-
             initPhotoResultAdapter(vkPhotoArray);
         } else {
             throw new RuntimeException(getString(R.string.inbox_fragment_argument_error) +
@@ -91,14 +90,15 @@ public class ResultListFragment extends Fragment implements
         resultRecyclerView = view.findViewById(R.id.rv_result_photos_list);
         floatButton = view.findViewById(R.id.fbt_result_list_fragment);
 
-        gridLayoutManager = new GridLayoutManager(getContext(), getResources()
-                .getInteger(R.integer.span_count_grid_result_portr));
-        linearLayoutManager = new LinearLayoutManager(getContext());
 
         int viewType = PrefUtils.getViewTypeFromPreference(getActivity());
         initFloatButton(viewType);
         initRecyclerView(viewType);
-        checkSavedPosition(savedInstanceState);
+        if (lastSavedPosition > 0) {
+            restoreRecyclerState();
+        } else {
+            checkSavedPosition(savedInstanceState);
+        }
         return view;
     }
 
@@ -131,8 +131,8 @@ public class ResultListFragment extends Fragment implements
     }
 
     private void checkSavedPosition(Bundle savedInstanceState) {
-        int noSavePosition = getResources().getInteger(R.integer.list_result_no_save_instance_position);
         if (savedInstanceState != null) {
+            int noSavePosition = getResources().getInteger(R.integer.list_result_no_save_instance_position);
             lastSavedPosition = savedInstanceState.getInt(
                     getString(R.string.list_result_position_save_key), noSavePosition
             );
