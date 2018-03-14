@@ -175,8 +175,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             }
         }
     }
-
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -199,16 +197,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public void onMapClick(LatLng latLng) {
         if (!isPlaceSelected) {
             isPlaceSelected = true;
-        }
-
-        floatButton.startAnimation();
-        onActivityCallback.onMapClick(latLng);
-        if (marker == null) {
-            marker = map.addMarker(new MarkerOptions()
-                    .position(latLng)
-                    .alpha(Float.parseFloat(getString(R.string.map_fragment_map_marker_alpha))));
+            floatButton.startAnimation();
+            if (marker == null) {
+                marker = map.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .alpha(Float.parseFloat(getString(R.string.map_fragment_map_marker_alpha))));
+            } else {
+                marker.setPosition(latLng);
+            }
         } else {
-            marker.setPosition(latLng);
+            onActivityCallback.onMapClick(latLng);
         }
     }
 
@@ -254,12 +252,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private void setDefaultMapSettings() {
         LatLng defaultLatLng = new LatLng(Double.parseDouble(getString(R.string.default_latitude)),
                 Double.parseDouble(getString(R.string.default_longitude)));
-
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLatLng,
                 Float.parseFloat(getString(R.string.map_fragment_map_default_zoom))));
-
     }
-
 
     @Override
     public boolean onMarkerClick(Marker marker) {

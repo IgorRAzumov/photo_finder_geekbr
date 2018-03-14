@@ -263,6 +263,7 @@ public class ResultActivity extends AppCompatActivity implements
     private void errorRequestPhotos(String message) {
         isLoading = false;
         UiUtils.showMessage(rootView, message);
+
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
