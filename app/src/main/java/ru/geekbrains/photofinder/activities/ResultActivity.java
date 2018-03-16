@@ -27,7 +27,7 @@ import ru.geekbrains.photofinder.utils.UiUtils;
 public class ResultActivity extends AppCompatActivity implements
         ResultListFragment.OnActivityCallback, ResultViewPagerFragment.OnActivityCallback,
         LoaderManager.LoaderCallbacks<PhotosResponse> {
-    private static final int SHOW_ERROR_MESSAGE_HANDLER_CODE = 222;
+    private static final int ERROR_LOAD_DATA_MESSAGE_HANDLER_CODE = 222;
     private static final int CHANGE_FRAGMENT_MESSAGE_HANDLER_CODE = 111;
     private static final int ADD_MORE_DATA_MESSAGE_HANDLER_CODE = 333;
 
@@ -94,7 +94,7 @@ public class ResultActivity extends AppCompatActivity implements
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            Message message = handler.obtainMessage(SHOW_ERROR_MESSAGE_HANDLER_CODE,
+                            Message message = handler.obtainMessage(ERROR_LOAD_DATA_MESSAGE_HANDLER_CODE,
                                     getString(R.string.list_result_no_search_result));
                             handler.sendMessage(message);
                         }
@@ -116,7 +116,7 @@ public class ResultActivity extends AppCompatActivity implements
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Message message = handler.obtainMessage(SHOW_ERROR_MESSAGE_HANDLER_CODE,
+                    Message message = handler.obtainMessage(ERROR_LOAD_DATA_MESSAGE_HANDLER_CODE,
                             getString(R.string.error_request));
                     handler.sendMessage(message);
                 }
@@ -215,6 +215,7 @@ public class ResultActivity extends AppCompatActivity implements
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.fl_result_container);
+
         if (fragment == null || !(fragment instanceof ResultListFragment)) {
             ResultListFragment resultListFragment = ResultListFragment.newInstance(
                     getString(R.string.vk_photo_array_bundle_key), photosResponse.getVkPhotoArray());
@@ -304,20 +305,17 @@ public class ResultActivity extends AppCompatActivity implements
                 case CHANGE_FRAGMENT_MESSAGE_HANDLER_CODE: {
                     ResultActivity resultActivity = reference.get();
                     if (resultActivity != null) {
-                        FragmentManager fragmentManager = resultActivity.getSupportFragmentManager();
-                        Fragment fragment = fragmentManager.findFragmentById(R.id.fl_result_container);
-                        if (fragment instanceof ProgressFragment) {
-                            resultActivity.switchProgressToResultRecycler((PhotosResponse) msg.obj);
-                        }
+                        resultActivity.switchProgressToResultRecycler((PhotosResponse) msg.obj);
+
                     }
                     break;
                 }
-                case SHOW_ERROR_MESSAGE_HANDLER_CODE: {
+                case ERROR_LOAD_DATA_MESSAGE_HANDLER_CODE: {
                     ResultActivity resultActivity = reference.get();
                     if (resultActivity != null) {
                         resultActivity.errorRequestPhotos((String) msg.obj);
-                        break;
                     }
+                    break;
                 }
                 case ADD_MORE_DATA_MESSAGE_HANDLER_CODE: {
                     ResultActivity resultActivity = reference.get();
